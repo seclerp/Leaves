@@ -25,11 +25,23 @@ namespace leafs_lang {
         /// Include all Leafs token types
         /// </summary>
         public enum TokenType {
-            EndOfInput,
-            Digit,
-            Operator,
+
+            Whitespace,
             Ident,
-            Whitespace
+
+            Number,
+
+            Star,
+            Slash,
+            Plus,
+            Minus,
+            Power,
+            Percent,
+
+            RightBrace, // (
+            LeftBrace,  // )
+
+            EndOfInput,
         }
 
         public TokenType Type { get; set; }
@@ -46,7 +58,7 @@ namespace leafs_lang {
         }
 
         public override string ToString() {
-            return Type.ToString() + ": (" + Value + ")";
+            return Type + ": (" + Value + ")";
         }
     }
 

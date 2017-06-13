@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using leafs_lang.Testing;
 
 namespace leafs_lang
 {
@@ -9,20 +10,38 @@ namespace leafs_lang
     {
         public static void Main(string[] args)
         {
-            Lexer lexer = new Lexer();
             
-            lexer.AddDefinition(new TokenDefinition(new Regex(@"^[ \t]*"), Token.TokenType.Ident));
-            lexer.AddDefinition(new TokenDefinition(new Regex(@"[0-9]"), Token.TokenType.Digit));
-            lexer.AddDefinition(new TokenDefinition(new Regex(@"[-+*/\^]"), Token.TokenType.Operator));
-            lexer.AddDefinition(new TokenDefinition(new Regex(@"\s"), Token.TokenType.Whitespace));
 
-            // TODO
+            ConsoleColor current = Console.ForegroundColor;
+            UnitTests.TestExpressions();
+            Console.ForegroundColor = current;
+
+            // TODO DODO DODODODOOD TOTOTOOTDODOODOD
             do {
-                Console.Write(">> ");
+                current = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write("-> ");
                 string input = Console.ReadLine();
-                string tokens = string.Join(", ", lexer.Tokenize(input).ToList());
-                Console.Write("Tokens: " + tokens);
-                Console.WriteLine();
+                Console.ForegroundColor = current;
+                try {
+                    Lexer lexer = new Lexer();
+                    lexer.InitializeTokenDefinitions();
+
+                    Parser parser = new Parser();
+                    var tokens = lexer.Tokenize(input);
+                    var result = parser.Parse(tokens.ToList());
+
+                    Console.Write(">> ");
+                    foreach (var expression in result) {
+                        Console.WriteLine(expression.Evaluate());
+                    }
+
+                    //string tokens = string.Join("\n\t", lexer.Tokenize(input).ToList());
+                } catch (Exception e) {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(e.GetType().Name + ": " + e.Message);
+                    Console.ForegroundColor = current;
+                }
             } while (true);
         }
     }
