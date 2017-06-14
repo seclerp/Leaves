@@ -10,10 +10,10 @@ namespace leafs_lang
     {
         public static void Main(string[] args)
         {
-            
-
+            Console.WriteLine("~ Leafs 0.0.1 live interpreter ~");
+            Console.WriteLine("~ Leafs 0.0.1 live interpreter ~");
             ConsoleColor current = Console.ForegroundColor;
-            UnitTests.TestExpressions();
+            //UnitTests.TestExpressions();
             Console.ForegroundColor = current;
 
             // TODO DODO DODODODOOD TOTOTOOTDODOODOD

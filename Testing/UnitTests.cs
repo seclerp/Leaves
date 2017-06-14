@@ -15,6 +15,7 @@ namespace leafs_lang.Testing {
                     {"-1^0", "1"},
 
                     {"1.23456789 ^ 9.87654321", "8,014041"},
+                    {"((1+3+7/3) *45-17-289+347-137(76+6+7/829/23/329/3+78+28))", "8,014041"},
                 };
             foreach (KeyValuePair<string, string> expressionTest in expressionTests) {
                 Lexer lexer = new Lexer();
