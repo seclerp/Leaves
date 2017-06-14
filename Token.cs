@@ -9,11 +9,14 @@ namespace leafs_lang {
         public bool IsIgnored { get; set; }
         public Regex Regex { get; set; }
         public Token.TokenType Type { get; set; }
+        // If not equals -1 uses submask result and not full result
+        public int UseMask { get; set; }
 
-        public TokenDefinition(Regex regex, Token.TokenType type, bool isIgnored = false) {
+        public TokenDefinition(Regex regex, Token.TokenType type, bool isIgnored = false, int useMask = -1) {
             Regex = regex;
             Type = type;
             IsIgnored = isIgnored;
+            UseMask = useMask;
         }
     }
     
@@ -37,6 +40,8 @@ namespace leafs_lang {
             Minus,
             Power,
             Percent,
+
+            String,
 
             RightBrace, // (
             LeftBrace,  // )

@@ -31,6 +31,10 @@ namespace leafs_lang {
             AddDefinition(new TokenDefinition(new Regex(@"\%"), Token.TokenType.Percent));
             AddDefinition(new TokenDefinition(new Regex(@"\^"), Token.TokenType.Power));
 
+            // Strings
+            AddDefinition(new TokenDefinition(new Regex(@"\" + "\"" + @"((?:[^\" + "\"" + @"\\]|\\.)*)\" + "\""), Token.TokenType.String, false, 1));
+            AddDefinition(new TokenDefinition(new Regex(@"\'((?:[^\'\\]|\\.)*)\'"), Token.TokenType.String, false, 1));
+
             // Braces
             AddDefinition(new TokenDefinition(new Regex(@"\("), Token.TokenType.LeftBrace));
             AddDefinition(new TokenDefinition(new Regex(@"\)"), Token.TokenType.RightBrace));
@@ -53,9 +57,10 @@ namespace leafs_lang {
             while (currentIndex < source.Length) {
                 TokenDefinition matchedDefinition = null;
                 int matchLength = 0;
+                Match match = null;
 
                 foreach (var rule in _definitions) {
-                    var match = rule.Regex.Match(source, currentIndex);
+                    match = rule.Regex.Match(source, currentIndex);
 
                     if (match.Success && (match.Index - currentIndex) == 0) {
                         matchedDefinition = rule;
@@ -67,8 +72,13 @@ namespace leafs_lang {
                 if (matchedDefinition == null) {
                     throw new LeafsSyntaxException($"Unrecognized symbol '({source[currentIndex]}' {currentLine}:{currentColumn})");
                 }
-                
-                var value = source.Substring(currentIndex, matchLength);
+
+                var value = "";
+                if (matchedDefinition.UseMask == -1) {
+                    value = source.Substring(currentIndex, matchLength);
+                } else {
+                    value = source.Substring(match.Groups[matchedDefinition.UseMask].Index, match.Groups[matchedDefinition.UseMask].Length);
+                }
 
                 if (!matchedDefinition.IsIgnored)
                     yield return new Token(matchedDefinition.Type, value, currentLine, currentColumn);

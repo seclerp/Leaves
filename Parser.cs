@@ -101,6 +101,9 @@ namespace leafs_lang {
 
         private IExpression Primary() {
             Token current = Get(0);
+            if (Match(Token.TokenType.String)) {
+                return new StringExpression(current.Value.ToString());
+            }
             if (Match(Token.TokenType.Number)) {
                 return new NumberExpression(float.Parse(current.Value, CultureInfo.InvariantCulture.NumberFormat));
             }

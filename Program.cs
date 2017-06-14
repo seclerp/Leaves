@@ -10,7 +10,7 @@ namespace leafs_lang
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("~ Leafs 0.0.1 live interpreter ~");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("~ Leafs 0.0.1 live interpreter ~");
             ConsoleColor current = Console.ForegroundColor;
             //UnitTests.TestExpressions();
@@ -23,7 +23,7 @@ namespace leafs_lang
                 Console.Write("-> ");
                 string input = Console.ReadLine();
                 Console.ForegroundColor = current;
-                try {
+                //try {
                     Lexer lexer = new Lexer();
                     lexer.InitializeTokenDefinitions();
 
@@ -31,17 +31,19 @@ namespace leafs_lang
                     var tokens = lexer.Tokenize(input);
                     var result = parser.Parse(tokens.ToList());
 
-                    Console.Write(">> ");
-                    foreach (var expression in result) {
-                        Console.WriteLine(expression.Evaluate());
+                    if (result.Count != 0) {
+                        Console.Write(">> ");
+                        foreach (var expression in result) {
+                            Console.WriteLine(expression.Evaluate());
+                        }
                     }
 
                     //string tokens = string.Join("\n\t", lexer.Tokenize(input).ToList());
-                } catch (Exception e) {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(e.GetType().Name + ": " + e.Message);
-                    Console.ForegroundColor = current;
-                }
+                //} catch (Exception e) {
+                    //Console.ForegroundColor = ConsoleColor.Yellow;
+                    //Console.WriteLine(e.GetType().Name + ": " + e.Message);
+                    //Console.ForegroundColor = current;
+                //}
             } while (true);
         }
     }

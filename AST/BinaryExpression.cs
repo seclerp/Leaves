@@ -20,8 +20,10 @@ namespace leafs_lang.AST {
 
             switch (Operator) {
                 case "+":
-                    // TODO: If right operand is string - return string 
-                    //if (rightValue)
+                    // If right or left operand is string - return string 
+                    if (rightValue.Type == "string" || leftValue.Type == "string") {
+                        return new LeafsValue("string", rightValue.ToString() + leftValue.ToString());
+                    }
                     return new LeafsValue("number", (float)rightValue.Value + (float)leftValue.Value);
                 case "-":
                     return new LeafsValue("number", (float)rightValue.Value - (float)leftValue.Value);
