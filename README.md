@@ -1,7 +1,7 @@
 # :leaves: LeafS language
 **LeafS** - powerful programming language with builtin tools for game developers.
 
-Project in active development.
+Project is in active development.
 
 ## Quick overview
 
@@ -47,7 +47,7 @@ _Note: project file is for **Visual Studio 2017**. If you want to open project i
 
 After that, press Build and Run green button on the top (or Ctrl+F5 to run without debugging, F5 to debug)
 
-If compilation will be fine, you will se window like that:
+If compilation will be fine, you will see window like that:
 
 ![GitHub Logo](/images/screenshot.png)
 
