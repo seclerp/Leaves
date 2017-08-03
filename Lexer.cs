@@ -3,22 +3,88 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using leafs_lang.Exceptions;
 
-namespace leafs_lang {
+namespace leafs_lang
+{
     /// <summary>
-    /// Implementation of regular expression lexer for Leafs
+    ///     Implementation of regular expression lexer for Leafs
     /// </summary>
-    public class Lexer : ILexer {
+    public class Lexer : ILexer
+    {
+        private readonly List<TokenDefinition> _definitions = new List<TokenDefinition>();
 
         public bool TokenDebug { get; set; }
 
-        List<TokenDefinition> _definitions = new List<TokenDefinition>();
-        
-        public void AddDefinition(TokenDefinition tokenDefinition) {
+        public void AddDefinition(TokenDefinition tokenDefinition)
+        {
             _definitions.Add(tokenDefinition);
         }
 
-        public void InitializeTokenDefinitions() {
-            //TODO Add token rege and order it heer
+        public IEnumerable<Token> Tokenize(string source)
+        {
+            // Need for continous regexp matching (offset)
+            var currentIndex = 0;
+            // Current token line
+            var currentLine = 1;
+            // Current token column
+            var currentColumn = 1;
+            var endOfLineRegex = new Regex("\n");
+
+            while (currentIndex < source.Length)
+            {
+                TokenDefinition matchedDefinition = null;
+                var matchLength = 0;
+                Match match = null;
+
+                foreach (var rule in _definitions)
+                {
+                    match = rule.Regex.Match(source, currentIndex);
+
+                    if (match.Success && match.Index - currentIndex == 0)
+                    {
+                        matchedDefinition = rule;
+                        matchLength = match.Length;
+                        break;
+                    }
+                }
+
+                if (matchedDefinition == null)
+                    throw new LeafsSyntaxException(new TokenPosition(currentLine, currentColumn),
+                        $"Unrecognized symbol '({source[currentIndex]}'");
+
+                var value = "";
+                if (matchedDefinition.UseMask == -1) value = source.Substring(currentIndex, matchLength);
+                else
+                    value = source.Substring(match.Groups[matchedDefinition.UseMask].Index,
+                        match.Groups[matchedDefinition.UseMask].Length);
+
+                if (!matchedDefinition.IsIgnored)
+                {
+                    if (TokenDebug) Console.WriteLine($"[{matchedDefinition.Type}]: {value}");
+                    yield return new Token(matchedDefinition.Type, value, currentLine, currentColumn);
+                }
+
+                var endOfLineMatch = endOfLineRegex.Match(value);
+                if (endOfLineMatch.Success)
+                {
+                    currentLine++;
+                    currentColumn = value.Length - (endOfLineMatch.Index + endOfLineMatch.Length);
+                }
+                else
+                {
+                    currentColumn += matchLength;
+                }
+
+                currentIndex += matchLength;
+            }
+
+            yield return new Token(Token.TokenType.EndOfInput, "(end)", currentLine, currentColumn);
+        }
+
+        public void InitializeTokenDefinitions()
+        {
+            //TODO Add token regex and order it here
+
+            // TODO Move to some serializable format
 
             // Ident
             AddDefinition(new TokenDefinition(new Regex(@"^[ \t]+"), Token.TokenType.Ident));
@@ -48,7 +114,8 @@ namespace leafs_lang {
             AddDefinition(new TokenDefinition(new Regex(@"\^"), Token.TokenType.Power));
 
             // Strings
-            AddDefinition(new TokenDefinition(new Regex(@"\" + "\"" + @"((?:[^\" + "\"" + @"\\]|\\.)*)\" + "\""), Token.TokenType.String, false, 1));
+            AddDefinition(new TokenDefinition(new Regex(@"\" + "\"" + @"((?:[^\" + "\"" + @"\\]|\\.)*)\" + "\""),
+                Token.TokenType.String, false, 1));
             AddDefinition(new TokenDefinition(new Regex(@"\'((?:[^\'\\]|\\.)*)\'"), Token.TokenType.String, false, 1));
 
             // Braces
@@ -58,66 +125,6 @@ namespace leafs_lang {
             // Whitespace need to be prcoessed AFTER IDENT, because of conflicts with ident
             // it also must be ignored
             AddDefinition(new TokenDefinition(new Regex(@"\s"), Token.TokenType.Whitespace, true));
-
-
-        }
-
-        public IEnumerable<Token> Tokenize(string source)
-        {
-            // Need for continous regexp matching (offset)
-            int currentIndex = 0;
-            // Current token line
-            int currentLine = 1;
-            // Current token column
-            int currentColumn = 1;
-            Regex endOfLineRegex = new Regex("\n");
-
-            while (currentIndex < source.Length) {
-                TokenDefinition matchedDefinition = null;
-                int matchLength = 0;
-                Match match = null;
-
-                foreach (var rule in _definitions) {
-                    match = rule.Regex.Match(source, currentIndex);
-
-                    if (match.Success && (match.Index - currentIndex) == 0) {
-                        matchedDefinition = rule;
-                        matchLength = match.Length;
-                        break;
-                    }
-                }
-
-                if (matchedDefinition == null) {
-
-                    throw new LeafsSyntaxException(new TokenPosition(currentLine, currentColumn), $"Unrecognized symbol '({source[currentIndex]}'");
-                }
-
-                var value = "";
-                if (matchedDefinition.UseMask == -1) {
-                    value = source.Substring(currentIndex, matchLength);
-                } else {
-                    value = source.Substring(match.Groups[matchedDefinition.UseMask].Index, match.Groups[matchedDefinition.UseMask].Length);
-                }
-
-                if (!matchedDefinition.IsIgnored) {
-                    if (TokenDebug) {
-                        Console.WriteLine($"[{matchedDefinition.Type}]: {value}");
-                    }
-                    yield return new Token(matchedDefinition.Type, value, currentLine, currentColumn);
-                }
-
-                var endOfLineMatch = endOfLineRegex.Match(value);
-                if (endOfLineMatch.Success) {
-                    currentLine++;
-                    currentColumn = value.Length - (endOfLineMatch.Index + endOfLineMatch.Length);
-                } else {
-                    currentColumn += matchLength;
-                }
-
-                currentIndex += matchLength;
-            }
-
-            yield return new Token(Token.TokenType.EndOfInput, "(end)",  currentLine, currentColumn);
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
-using leafs_lang.Testing;
 
 namespace leafs_lang
 {
@@ -12,31 +9,28 @@ namespace leafs_lang
         {
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("~ Leafs 0.0.1 live interpreter ~");
-            ConsoleColor current = Console.ForegroundColor;
+            var current = Console.ForegroundColor;
             //UnitTests.TestExpressions();
             Console.ForegroundColor = current;
 
             // TODO DODO DODODODOOD TOTOTOOTDODOODOD
-            do {
+            do
+            {
                 current = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("-> ");
-                string input = Console.ReadLine();
+                var input = Console.ReadLine();
                 Console.ForegroundColor = current;
                 //try {
-                    Lexer lexer = new Lexer();
-                    lexer.TokenDebug = true;
-                    lexer.InitializeTokenDefinitions();
+                var lexer = new Lexer();
+                lexer.TokenDebug = true;
+                lexer.InitializeTokenDefinitions();
 
-                    Parser parser = new Parser();
-                    var tokens = lexer.Tokenize(input);
-                    var result = parser.Parse(tokens.ToList());
+                var parser = new Parser();
+                var tokens = lexer.Tokenize(input);
+                var result = parser.Parse(tokens.ToList());
 
-                    if (result.Count != 0) {
-                        foreach (var expression in result) {
-                            expression?.Execute();
-                        }
-                    }
+                if (result.Count != 0) foreach (var expression in result) expression?.Execute();
 
                 //string tokens = string.Join("\n\t", lexer.Tokenize(input).ToList());
                 //} catch (Exception e) {
@@ -45,7 +39,7 @@ namespace leafs_lang
                 //    Console.WriteLine(e);
                 //    Console.ForegroundColor = current;
                 //}
-        } while (true);
+            } while (true);
         }
     }
 }

@@ -1,15 +1,15 @@
-using System.Collections.Generic;
-
-namespace leafs_lang {
+namespace leafs_lang
+{
     /// <summary>
-    /// Represents simplest instance in lexer
+    ///     Represents simplest instance in lexer
     /// </summary>
-    public class Token {
+    public class Token
+    {
         /// <summary>
-        /// Include all Leafs token types
+        ///     Include all Leafs token types
         /// </summary>
-        public enum TokenType {
-
+        public enum TokenType
+        {
             Whitespace,
             Ident,
 
@@ -20,39 +20,42 @@ namespace leafs_lang {
             Word,
             Comment,
 
-            Star,       // *
-            Slash,      // /
-            Plus,       // +
-            Minus,      // -
-            Power,      // ^
-            Percent,    // %
-            Equal,      // =
+            Star, // *
+            Slash, // /
+            Plus, // +
+            Minus, // -
+            Power, // ^
+            Percent, // %
+            Equal, // =
             TildaEqual, // ~=
 
-            String,     // "some string", 'some string'
+            String, // "some string", 'some string'
 
             RightBrace, // )
-            LeftBrace,  // (
+            LeftBrace, // (
 
             Print,
 
-            EndOfInput,
+            EndOfInput
+        }
+
+        public Token(TokenType type, string value)
+        {
+            Type = type;
+            Value = value;
+        }
+
+        public Token(TokenType type, string value, int column, int row) : this(type, value)
+        {
+            Position = new TokenPosition(column, row);
         }
 
         public TokenType Type { get; set; }
         public TokenPosition Position { get; set; }
         public string Value { get; set; }
 
-        public Token(TokenType type, string value) {
-            Type = type;
-            Value = value;
-        }
-
-        public Token(TokenType type, string value, int column, int row) : this(type, value) {
-            Position = new TokenPosition(column, row);
-        }
-
-        public override string ToString() {
+        public override string ToString()
+        {
             return Type + ": (" + Value + ")";
         }
     }
