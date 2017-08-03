@@ -22,7 +22,7 @@ namespace leafs_lang.Testing {
                 lexer.InitializeTokenDefinitions();
                 Parser parser = new Parser();
                 var tokens = lexer.Tokenize(expressionTest.Key);
-                var result = parser.Parse(tokens.ToList())[0].Evaluate().ToString();
+                var result = parser.Parse(tokens.ToList())[0].Execute().Evaluate().ToString();
 
                 if (result == expressionTest.Value) {
                     result = "OK -- " + expressionTest.Key;

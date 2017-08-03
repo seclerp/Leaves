@@ -18,7 +18,7 @@ namespace leafs_lang.AST {
                     return new LeafsValue("number", -(float)value.Value);
             }
 
-            throw new LeafsSyntaxException($"Unknown type of unary operator: '{Operator}' ");
+            throw new LeafsSyntaxException(null, $"Unknown type of unary operator: '{Operator}' ");
         }
     }
 }

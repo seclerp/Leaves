@@ -37,7 +37,7 @@ namespace leafs_lang.AST {
                     return new LeafsValue("number", (float)rightValue.Value % (float)leftValue.Value);
             }
 
-            throw new LeafsSyntaxException($"Unknown type of binary operator: '{Operator}'");
+            throw new LeafsSyntaxException(null, $"Unknown type of binary operator: '{Operator}'");
         }
     }
 }

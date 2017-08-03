@@ -25,6 +25,7 @@ namespace leafs_lang
                 Console.ForegroundColor = current;
                 //try {
                     Lexer lexer = new Lexer();
+                    lexer.TokenDebug = true;
                     lexer.InitializeTokenDefinitions();
 
                     Parser parser = new Parser();
@@ -32,19 +33,19 @@ namespace leafs_lang
                     var result = parser.Parse(tokens.ToList());
 
                     if (result.Count != 0) {
-                        Console.Write(">> ");
                         foreach (var expression in result) {
-                            Console.WriteLine(expression.Evaluate());
+                            expression?.Execute();
                         }
                     }
 
-                    //string tokens = string.Join("\n\t", lexer.Tokenize(input).ToList());
+                //string tokens = string.Join("\n\t", lexer.Tokenize(input).ToList());
                 //} catch (Exception e) {
-                    //Console.ForegroundColor = ConsoleColor.Yellow;
-                    //Console.WriteLine(e.GetType().Name + ": " + e.Message);
-                    //Console.ForegroundColor = current;
+                //    throw e;
+                //    Console.ForegroundColor = ConsoleColor.Yellow;
+                //    Console.WriteLine(e);
+                //    Console.ForegroundColor = current;
                 //}
-            } while (true);
+        } while (true);
         }
     }
 }

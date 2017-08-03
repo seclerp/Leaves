@@ -5,6 +5,6 @@ using leafs_lang.DataTypes;
 
 namespace leafs_lang {
     public interface IParser {
-        List<IExpression> Parse(List<Token> tokens);
+        List<IStatement> Parse(List<Token> tokens);
     }
 }

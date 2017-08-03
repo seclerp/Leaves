@@ -8,6 +8,9 @@ namespace leafs_lang {
     /// Implementation of regular expression lexer for Leafs
     /// </summary>
     public class Lexer : ILexer {
+
+        public bool TokenDebug { get; set; }
+
         List<TokenDefinition> _definitions = new List<TokenDefinition>();
         
         public void AddDefinition(TokenDefinition tokenDefinition) {
@@ -23,7 +26,20 @@ namespace leafs_lang {
             // Numbers, unary digits are not included
             AddDefinition(new TokenDefinition(new Regex(@"[0-9]+(\.[0-9]+)?"), Token.TokenType.Number));
 
+            // Keywords
+            // Must be before words to avoid conflicts
+            AddDefinition(new TokenDefinition(new Regex(@"(\s|^)(print)(\s|$)"), Token.TokenType.Print, false, 2));
+
+            // Word - starts from letter, letters, digits, _, `, $ 
+            AddDefinition(new TokenDefinition(new Regex(@"\p{L}[\w\`\$]*"), Token.TokenType.Word));
+
+            // Comments - single line started from # and //, multiline by /* */
+            AddDefinition(new TokenDefinition(new Regex(@"((\#|\/\/)(.*))(\n|\Z)"), Token.TokenType.Comment, true));
+            AddDefinition(new TokenDefinition(new Regex(@"\/\*(.*)\*\/"), Token.TokenType.Comment, true));
+
             // Operators
+            AddDefinition(new TokenDefinition(new Regex(@"\~="), Token.TokenType.Equal));
+            AddDefinition(new TokenDefinition(new Regex(@"\="), Token.TokenType.Equal));
             AddDefinition(new TokenDefinition(new Regex(@"\+"), Token.TokenType.Plus));
             AddDefinition(new TokenDefinition(new Regex(@"\-"), Token.TokenType.Minus));
             AddDefinition(new TokenDefinition(new Regex(@"\*"), Token.TokenType.Star));
@@ -42,6 +58,8 @@ namespace leafs_lang {
             // Whitespace need to be prcoessed AFTER IDENT, because of conflicts with ident
             // it also must be ignored
             AddDefinition(new TokenDefinition(new Regex(@"\s"), Token.TokenType.Whitespace, true));
+
+
         }
 
         public IEnumerable<Token> Tokenize(string source)
@@ -70,7 +88,8 @@ namespace leafs_lang {
                 }
 
                 if (matchedDefinition == null) {
-                    throw new LeafsSyntaxException($"Unrecognized symbol '({source[currentIndex]}' {currentLine}:{currentColumn})");
+
+                    throw new LeafsSyntaxException(new TokenPosition(currentLine, currentColumn), $"Unrecognized symbol '({source[currentIndex]}'");
                 }
 
                 var value = "";
@@ -80,8 +99,12 @@ namespace leafs_lang {
                     value = source.Substring(match.Groups[matchedDefinition.UseMask].Index, match.Groups[matchedDefinition.UseMask].Length);
                 }
 
-                if (!matchedDefinition.IsIgnored)
+                if (!matchedDefinition.IsIgnored) {
+                    if (TokenDebug) {
+                        Console.WriteLine($"[{matchedDefinition.Type}]: {value}");
+                    }
                     yield return new Token(matchedDefinition.Type, value, currentLine, currentColumn);
+                }
 
                 var endOfLineMatch = endOfLineRegex.Match(value);
                 if (endOfLineMatch.Success) {
