@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using leafs_lang.DataTypes;
+using LeafS.DataTypes;
 
-namespace leafs_lang
+namespace LeafS
 {
     public class GlobalValues
     {

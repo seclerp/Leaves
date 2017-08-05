@@ -1,6 +1,7 @@
 ﻿using System;
+using LeafS.Lexer;
 
-namespace leafs_lang.Exceptions
+namespace LeafS.Exceptions
 {
     public class LeafsException : Exception
     {

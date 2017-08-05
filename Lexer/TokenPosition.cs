@@ -1,4 +1,4 @@
-namespace leafs_lang
+namespace LeafS.Lexer
 {
     /// <summary>
     ///     Determines token position in source code

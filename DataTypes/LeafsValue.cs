@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace leafs_lang.DataTypes
+namespace LeafS.DataTypes
 {
     public class LeafsValue
     {

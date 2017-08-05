@@ -1,6 +1,6 @@
-﻿using leafs_lang.DataTypes;
+﻿using LeafS.DataTypes;
 
-namespace leafs_lang.AST
+namespace LeafS.AST
 {
     public class StringExpression : IExpression
     {

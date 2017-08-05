@@ -1,7 +1,7 @@
-﻿using leafs_lang.DataTypes;
-using leafs_lang.Exceptions;
+﻿using LeafS.DataTypes;
+using LeafS.Exceptions;
 
-namespace leafs_lang.AST
+namespace LeafS.AST
 {
     public class UnaryExpression : IExpression
     {

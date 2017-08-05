@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 
-namespace leafs_lang
+namespace LeafS
 {
     internal class Program
     {
         public static void Main(string[] args)
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
+            /*Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("~ Leafs 0.0.1 live interpreter ~");
             var current = Console.ForegroundColor;
             //UnitTests.TestExpressions();
@@ -22,11 +22,11 @@ namespace leafs_lang
                 var input = Console.ReadLine();
                 Console.ForegroundColor = current;
                 //try {
-                var lexer = new Lexer();
+                var lexer = new Lexer.Lexer();
                 lexer.TokenDebug = true;
                 lexer.InitializeTokenDefinitions();
 
-                var parser = new Parser();
+                var parser = new Parser.Parser();
                 var tokens = lexer.Tokenize(input);
                 var result = parser.Parse(tokens.ToList());
 
@@ -39,7 +39,10 @@ namespace leafs_lang
                 //    Console.WriteLine(e);
                 //    Console.ForegroundColor = current;
                 //}
-            } while (true);
+            } while (true);*/
+
+            var compiler = new Complier.Compiler();
+            compiler.Compile("test.exe", "code.lfs");
         }
     }
 }

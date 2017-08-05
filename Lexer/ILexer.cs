@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-namespace leafs_lang
+namespace LeafS.Lexer
 {
     public interface ILexer
     {
-        void AddDefinition(TokenDefinition tokenDefinition);
+        void AddDefinition(TokenRule tokenDefinition);
         IEnumerable<Token> Tokenize(string source);
     }
 }

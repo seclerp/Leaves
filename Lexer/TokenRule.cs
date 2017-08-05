@@ -1,13 +1,13 @@
 using System.Text.RegularExpressions;
 
-namespace leafs_lang
+namespace LeafS.Lexer
 {
     /// <summary>
     ///     This class is used to match source code and token
     /// </summary>
-    public class TokenDefinition
+    public class TokenRule
     {
-        public TokenDefinition(Regex regex, Token.TokenType type, bool isIgnored = false, int useMask = -1)
+        public TokenRule(Regex regex, TokenType type, bool isIgnored = false, int useMask = -1)
         {
             Regex = regex;
             Type = type;
@@ -15,12 +15,10 @@ namespace leafs_lang
             UseMask = useMask;
         }
 
-        public bool IsIgnored { get; set; }
-        public Regex Regex { get; set; }
-
-        public Token.TokenType Type { get; set; }
-
+        public Regex Regex { get; private set; }
         // If not equals -1 uses submask result and not full result
-        public int UseMask { get; set; }
+        public int UseMask { get; private set; }
+        public TokenType Type { get; protected set; }
+        public bool IsIgnored { get; protected set; }
     }
 }

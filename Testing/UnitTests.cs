@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace leafs_lang.Testing
+namespace LeafS.Testing
 {
     public class UnitTests
     {
         public static void TestExpressions()
         {
-            Console.WriteLine("Unit tests: \n");
+            /*Console.WriteLine("Unit tests: \n");
 
             var expressionTests =
                 new Dictionary<string, string>
@@ -23,9 +23,9 @@ namespace leafs_lang.Testing
                 };
             foreach (var expressionTest in expressionTests)
             {
-                var lexer = new Lexer();
+                var lexer = new Lexer.Lexer();
                 lexer.InitializeTokenDefinitions();
-                var parser = new Parser();
+                var parser = new Parser.Parser();
                 var tokens = lexer.Tokenize(expressionTest.Key);
                 var result = parser.Parse(tokens.ToList())[0].Execute().Evaluate().ToString();
 
@@ -45,7 +45,7 @@ namespace leafs_lang.Testing
                 }
                 Console.WriteLine(result);
             }
-            Console.WriteLine();
+            Console.WriteLine();*/
         }
     }
 }

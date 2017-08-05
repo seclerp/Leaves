@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using leafs_lang.AST;
-using leafs_lang.Exceptions;
+using System.Linq;
+using LeafS.AST;
+using LeafS.Exceptions;
+using LeafS.Lexer;
 
-namespace leafs_lang
+namespace LeafS.Parser
 {
     internal class Parser : IParser
     {
         private int _currentPosition;
         private int _size;
-        private List<Token> _tokens;
+        private Token[] _tokens;
 
-        public List<IStatement> Parse(List<Token> tokens)
+        public IStatement[] Parse(Token[] tokens)
         {
             _tokens = tokens;
-            _size = _tokens.Count;
+            _size = _tokens.Count();
             var result = new List<IStatement>();
-            while (true)
+            while (!Match(TokenType.EndOfInput))
             {
-                if (Match(Token.TokenType.EndOfInput)) break;
                 result.Add(Statement());
             }
-            return result;
+            return result.ToArray();
         }
 
         public IStatement Statement()
@@ -35,22 +36,21 @@ namespace leafs_lang
         {
             Console.WriteLine("Print");
             var current = Get(0);
-            if (current.Type == Token.TokenType.Print)
+            if (current.Type == TokenType.Print)
             {
-                Match(Token.TokenType.Print);
+                Match(TokenType.Print);
                 return new PrintStatement(Expression().Evaluate());
             }
             return AssignmentStatement();
         }
 
-
         public IStatement AssignmentStatement()
         {
             Console.WriteLine("Assign");
             var current = Get(0);
-            if (Match(Token.TokenType.Word) && Get(0).Type == Token.TokenType.Equal)
+            if (Match(TokenType.Word) && Get(0).Type == TokenType.Equal)
             {
-                Consume(Token.TokenType.Equal);
+                Consume(TokenType.Equal);
                 return new AssignmentStatement(current.Value, Expression().Evaluate());
             }
             throw new LeafsException(current.Position, "Unknown statement");
@@ -69,12 +69,12 @@ namespace leafs_lang
 
             while (true)
             {
-                if (Match(Token.TokenType.Plus))
+                if (Match(TokenType.Plus))
                 {
                     result = new BinaryExpression(result, "+", Mod());
                     continue;
                 }
-                if (Match(Token.TokenType.Minus))
+                if (Match(TokenType.Minus))
                 {
                     result = new BinaryExpression(result, "-", Mod());
                     continue;
@@ -92,7 +92,7 @@ namespace leafs_lang
 
             while (true)
             {
-                if (Match(Token.TokenType.Percent))
+                if (Match(TokenType.Percent))
                 {
                     result = new BinaryExpression(result, "%", Multiplicative());
                     continue;
@@ -110,12 +110,12 @@ namespace leafs_lang
 
             while (true)
             {
-                if (Match(Token.TokenType.Star))
+                if (Match(TokenType.Star))
                 {
                     result = new BinaryExpression(result, "*", Power());
                     continue;
                 }
-                if (Match(Token.TokenType.Slash))
+                if (Match(TokenType.Slash))
                 {
                     result = new BinaryExpression(result, "/", Power());
                     continue;
@@ -134,7 +134,7 @@ namespace leafs_lang
 
             while (true)
             {
-                if (Match(Token.TokenType.Power))
+                if (Match(TokenType.Power))
                 {
                     result = new BinaryExpression(result, "^", Unary());
                     continue;
@@ -149,7 +149,7 @@ namespace leafs_lang
         {
             Console.WriteLine("Unary");
 
-            if (Match(Token.TokenType.Minus)) return new UnaryExpression(Primary(), "-");
+            if (Match(TokenType.Minus)) return new UnaryExpression(Primary(), "-");
 
             return Primary();
         }
@@ -159,26 +159,34 @@ namespace leafs_lang
             Console.WriteLine("Primary");
 
             var current = Get(0);
-            if (Match(Token.TokenType.String)) return new StringExpression(current.Value);
-            if (Match(Token.TokenType.Word))
+            if (Match(TokenType.String)) return new StringExpression(current.Value);
+            if (Match(TokenType.Word))
             {
                 if (!GlobalValues.Items.ContainsKey(current.Value + ""))
                     throw new LeafsUnknownIdentifier(current.Position, current.Value);
-                return new NumberExpression((float) GlobalValues.Items[current.Value + ""].Value);
+
+                if (GlobalValues.Items[current.Value + ""].Type == "string")
+                {
+                    return new StringExpression((string) GlobalValues.Items[current.Value + ""].Value);
+                }
+                else if (GlobalValues.Items[current.Value + ""].Type == "nubmer")
+                {
+                    return new NumberExpression((float) GlobalValues.Items[current.Value + ""].Value);
+                }
             }
-            if (Match(Token.TokenType.Number))
+            if (Match(TokenType.Number))
                 return new NumberExpression(float.Parse(current.Value, CultureInfo.InvariantCulture.NumberFormat));
-            if (Match(Token.TokenType.LeftBrace))
+            if (Match(TokenType.LeftBrace))
             {
                 var result = Expression();
-                Match(Token.TokenType.RightBrace);
+                Match(TokenType.RightBrace);
                 return result;
             }
             throw new LeafsSyntaxException(current.Position,
                 $"Unknown expression: '{current.Value}' ({current.Position.Column}:{current.Position.Row})");
         }
 
-        public Token Consume(Token.TokenType type)
+        public Token Consume(TokenType type)
         {
             var current = Get(0);
             if (type != current.Type)
@@ -187,7 +195,7 @@ namespace leafs_lang
             return current;
         }
 
-        private bool Match(Token.TokenType type)
+        private bool Match(TokenType type)
         {
             var current = Get(0);
             if (type != current.Type)
@@ -199,15 +207,19 @@ namespace leafs_lang
         private Token Peek()
         {
             var current = Get(0);
-            _currentPosition++;
             return current;
+        }
+
+        private void Skip(int amount = 1)
+        {
+            _currentPosition+=amount;
         }
 
         private Token Get(int relativePosition)
         {
             var position = _currentPosition + relativePosition;
             if (position >= _size)
-                return new Token(Token.TokenType.EndOfInput, "(end)");
+                return new Token(TokenType.EndOfInput, "(end)");
             return _tokens[position];
         }
     }

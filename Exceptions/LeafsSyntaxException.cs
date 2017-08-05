@@ -1,4 +1,6 @@
-﻿namespace leafs_lang.Exceptions
+﻿using LeafS.Lexer;
+
+namespace LeafS.Exceptions
 {
     public class LeafsSyntaxException : LeafsException
     {

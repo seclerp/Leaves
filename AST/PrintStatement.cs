@@ -1,7 +1,9 @@
 ﻿using System;
-using leafs_lang.DataTypes;
+using LeafS.Complier;
+using LeafS.DataTypes;
+using Mono.Cecil.Cil;
 
-namespace leafs_lang.AST
+namespace LeafS.AST
 {
     public class PrintStatement : IStatement
     {
@@ -16,6 +18,12 @@ namespace leafs_lang.AST
         {
             Console.WriteLine(">> " + Argument.Value);
             return null;
+        }
+
+        public void Emit(Context context)
+        {
+            context.CurrentProcessor.Emit(OpCodes.Ldstr, (string)Argument.Value);
+            context.CurrentProcessor.Emit(OpCodes.Call, context.ModuleDef.Import(typeof(Console).GetMethod("WriteLine", new [] { typeof( string ) })));
         }
     }
 }
