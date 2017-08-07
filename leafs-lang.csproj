@@ -66,6 +66,10 @@
     <Compile Include="AST\UnaryExpression.cs" />
     <Compile Include="Complier\Compiler.cs" />
     <Compile Include="Complier\Context.cs" />
+    <Compile Include="Complier\EmitHelper.cs" />
+    <Compile Include="Complier\MethodContext.cs" />
+    <Compile Include="Complier\ModuleContext.cs" />
+    <Compile Include="Complier\TypesCache.cs" />
     <Compile Include="DataTypes\LeafsValue.cs" />
     <Compile Include="Exceptions\LeafsException.cs" />
     <Compile Include="Exceptions\LeafsSyntaxException.cs" />

@@ -27,10 +27,10 @@ namespace LeafS.AST
 
         public void Emit(Context context)
         {
-            TypeReference typeDefinition;
+            var varIndex = -1;
+            bool createNew = !context.Method.NameMappings.ContainsKey(Name);
 
-
-            context.MethodDef.Body.Variables.Add(new VariableDefinition(Name, context.ModuleDef.Import(typeof(String))));
+            EmitHelper.AssignVar(context, Name, Value.Value, createNew);
         }
     }
 }

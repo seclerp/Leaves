@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Mono.Cecil;
@@ -31,7 +32,22 @@ namespace LeafS.Complier
                 // сохраняем короткую ссылку на генератор кода
                 var ip = method.Body.GetILProcessor();
 
-                var mainContext = new Context(ip, asm.MainModule, type, method);
+                var mainContext = new Context
+                {
+                    Processor = ip,
+                    Module = new ModuleContext
+                    {
+                        Types = new TypesCache(asm.MainModule),
+                        Def = asm.MainModule
+                    },
+                    TypeDef = type,
+                    Method = new MethodContext
+                    {
+                        Def = method,
+                        NameMappings = new Dictionary<string, int>(),
+                        VariablesCount = 0
+                    }
+                };
 
                 foreach (var statement in statements)
                     statement.Emit(mainContext);

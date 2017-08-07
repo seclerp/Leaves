@@ -34,7 +34,6 @@ namespace LeafS.Parser
 
         public IStatement PrintStatement()
         {
-            Console.WriteLine("Print");
             var current = Get(0);
             if (current.Type == TokenType.Print)
             {
@@ -46,7 +45,6 @@ namespace LeafS.Parser
 
         public IStatement AssignmentStatement()
         {
-            Console.WriteLine("Assign");
             var current = Get(0);
             if (Match(TokenType.Word) && Get(0).Type == TokenType.Equal)
             {
@@ -58,13 +56,11 @@ namespace LeafS.Parser
 
         public IExpression Expression()
         {
-            Console.WriteLine("Expression");
             return Additive();
         }
 
         private IExpression Additive()
         {
-            Console.WriteLine("Additive");
             var result = Mod();
 
             while (true)
@@ -87,7 +83,6 @@ namespace LeafS.Parser
 
         private IExpression Mod()
         {
-            Console.WriteLine("Mod");
             var result = Multiplicative();
 
             while (true)
@@ -105,7 +100,6 @@ namespace LeafS.Parser
 
         private IExpression Multiplicative()
         {
-            Console.WriteLine("Multiplicative");
             var result = Power();
 
             while (true)
@@ -128,8 +122,6 @@ namespace LeafS.Parser
 
         private IExpression Power()
         {
-            Console.WriteLine("Power");
-
             var result = Unary();
 
             while (true)
@@ -147,8 +139,6 @@ namespace LeafS.Parser
 
         private IExpression Unary()
         {
-            Console.WriteLine("Unary");
-
             if (Match(TokenType.Minus)) return new UnaryExpression(Primary(), "-");
 
             return Primary();
@@ -156,8 +146,6 @@ namespace LeafS.Parser
 
         private IExpression Primary()
         {
-            Console.WriteLine("Primary");
-
             var current = Get(0);
             if (Match(TokenType.String)) return new StringExpression(current.Value);
             if (Match(TokenType.Word))
