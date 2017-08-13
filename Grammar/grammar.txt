@@ -1,0 +1,47 @@
+﻿# General parts
+module				= class 
+					| component	# TODO
+					| container	# TODO
+
+access				= "private" 
+					| "protected" 
+					| "public"
+
+# OOP
+class				= access "class" name class_declaration 
+					| "class" name class_declaration
+
+class_declaration	= block_start class_members block_end
+
+class_members		= class_member 
+					| class_member class_members
+
+class_member		= field
+					| property # TODO
+					| method
+					| constructor # TODO
+
+field				= access identifier identifier ";"
+					| access identifier identifier "=" expression ";"
+
+method				= access identifier identifier "(" args ")" block_start 
+						  block_statement
+					  block_end
+
+block_statement		= statement
+					| statement block_statement
+
+statement			= assign_statement
+					| newvar_statement
+					| loop_statement
+					| print_statement
+
+newvar_statement	= identifier identifier "=" expression ";"	
+
+assign_statement	= identifier "=" expression ";"		
+
+loop_statement		= for_statement	# TODO
+					| while_statement	# TODO
+					| do_statement	# TODO
+
+print_statement		= "print" expression ";"

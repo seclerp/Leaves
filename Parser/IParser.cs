@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using LeafS.AST;
+using LeafS.AST.Nodes;
 using LeafS.Lexer;
 
 namespace LeafS.Parser
 {
     public interface IParser
     {
-        IStatement[] Parse(Token[] tokens);
+        INode Parse(Token[] tokens);
     }
 }

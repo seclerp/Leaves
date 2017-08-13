@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using LeafS.AST;
+using LeafS.AST.Nodes;
 using LeafS.Exceptions;
 using LeafS.Lexer;
 
@@ -14,201 +17,193 @@ namespace LeafS.Parser
         private int _size;
         private Token[] _tokens;
 
-        public IStatement[] Parse(Token[] tokens)
+        #region Token handlers
+
+        private Token Get(int offset)
         {
-            _tokens = tokens;
-            _size = _tokens.Count();
-            var result = new List<IStatement>();
-            while (!Match(TokenType.EndOfInput))
+            return _currentPosition + offset >= _size - 1
+                 ? _tokens[_currentPosition + offset]
+                 : new Token(TokenType.EndOfInput, null);
+        }
+
+        private Token Current()
+        {
+            return Get(0);
+        }
+
+        // Move token cursor and return new token
+        private Token Move(int amount)
+        {
+            _currentPosition += amount;
+            return Get(0);
+        }
+
+        // Move cursor to next token and return token
+        private Token Next()
+        {
+            return Move(1);
+        }
+
+        private void Skip()
+        {
+            Next();
+        }
+
+        // Check works with current token
+        private bool Check(TokenType type, string message = null)
+        {
+            var current = Current();
+            if (current.Type != type)
             {
-                result.Add(Statement());
-            }
-            return result.ToArray();
-        }
+                if (!string.IsNullOrEmpty(message))
+                    throw new LeafsSyntaxException(current.Position, message);
 
-        public IStatement Statement()
-        {
-            var result = PrintStatement();
-            return result;
-        }
-
-        public IStatement PrintStatement()
-        {
-            var current = Get(0);
-            if (current.Type == TokenType.Print)
-            {
-                Match(TokenType.Print);
-                return new PrintStatement(Expression().Evaluate());
-            }
-            return AssignmentStatement();
-        }
-
-        public IStatement AssignmentStatement()
-        {
-            var current = Get(0);
-            if (Match(TokenType.Word) && Get(0).Type == TokenType.Equal)
-            {
-                Consume(TokenType.Equal);
-                return new AssignmentStatement(current.Value, Expression().Evaluate());
-            }
-            throw new LeafsException(current.Position, "Unknown statement");
-        }
-
-        public IExpression Expression()
-        {
-            return Additive();
-        }
-
-        private IExpression Additive()
-        {
-            var result = Mod();
-
-            while (true)
-            {
-                if (Match(TokenType.Plus))
-                {
-                    result = new BinaryExpression(result, "+", Mod());
-                    continue;
-                }
-                if (Match(TokenType.Minus))
-                {
-                    result = new BinaryExpression(result, "-", Mod());
-                    continue;
-                }
-                break;
-            }
-
-            return result;
-        }
-
-        private IExpression Mod()
-        {
-            var result = Multiplicative();
-
-            while (true)
-            {
-                if (Match(TokenType.Percent))
-                {
-                    result = new BinaryExpression(result, "%", Multiplicative());
-                    continue;
-                }
-                break;
-            }
-
-            return result;
-        }
-
-        private IExpression Multiplicative()
-        {
-            var result = Power();
-
-            while (true)
-            {
-                if (Match(TokenType.Star))
-                {
-                    result = new BinaryExpression(result, "*", Power());
-                    continue;
-                }
-                if (Match(TokenType.Slash))
-                {
-                    result = new BinaryExpression(result, "/", Power());
-                    continue;
-                }
-                break;
-            }
-
-            return result;
-        }
-
-        private IExpression Power()
-        {
-            var result = Unary();
-
-            while (true)
-            {
-                if (Match(TokenType.Power))
-                {
-                    result = new BinaryExpression(result, "^", Unary());
-                    continue;
-                }
-                break;
-            }
-
-            return result;
-        }
-
-        private IExpression Unary()
-        {
-            if (Match(TokenType.Minus)) return new UnaryExpression(Primary(), "-");
-
-            return Primary();
-        }
-
-        private IExpression Primary()
-        {
-            var current = Get(0);
-            if (Match(TokenType.String)) return new StringExpression(current.Value);
-            if (Match(TokenType.Word))
-            {
-                if (!GlobalValues.Items.ContainsKey(current.Value + ""))
-                    throw new LeafsUnknownIdentifier(current.Position, current.Value);
-
-                if (GlobalValues.Items[current.Value + ""].Type == "string")
-                {
-                    return new StringExpression((string) GlobalValues.Items[current.Value + ""].Value);
-                }
-                else if (GlobalValues.Items[current.Value + ""].Type == "nubmer")
-                {
-                    return new NumberExpression((float) GlobalValues.Items[current.Value + ""].Value);
-                }
-            }
-            if (Match(TokenType.Number))
-                return new NumberExpression(float.Parse(current.Value, CultureInfo.InvariantCulture.NumberFormat));
-            if (Match(TokenType.LeftBrace))
-            {
-                var result = Expression();
-                Match(TokenType.RightBrace);
-                return result;
-            }
-            throw new LeafsSyntaxException(current.Position,
-                $"Unknown expression: '{current.Value}' ({current.Position.Column}:{current.Position.Row})");
-        }
-
-        public Token Consume(TokenType type)
-        {
-            var current = Get(0);
-            if (type != current.Type)
-                throw new LeafsSyntaxException(current.Position, "Token " + current + " doesn't match " + type);
-            _currentPosition++;
-            return current;
-        }
-
-        private bool Match(TokenType type)
-        {
-            var current = Get(0);
-            if (type != current.Type)
                 return false;
-            _currentPosition++;
+            }
             return true;
         }
 
-        private Token Peek()
+        private bool CheckAndSkip(TokenType type, string message = null)
         {
-            var current = Get(0);
-            return current;
+            var result = Check(type, message);
+            if (result)
+                Skip();
+            return result;
         }
 
-        private void Skip(int amount = 1)
+        private bool Match(TokenType type, string value)
         {
-            _currentPosition+=amount;
+            var typeMatch = Check(type);
+
+            if (Get(0).Value != value)
+            {
+                return false;
+            }
+
+            return typeMatch;
         }
 
-        private Token Get(int relativePosition)
+        #endregion
+
+        public INode Parse(Token[] tokens)
         {
-            var position = _currentPosition + relativePosition;
-            if (position >= _size)
-                return new Token(TokenType.EndOfInput, "(end)");
-            return _tokens[position];
+            _currentPosition = 0;
+            _tokens = tokens;
+            _size = tokens.Length;
+
+            return Module();
+        }
+
+        /*  
+            class 
+		    | component	# TODO
+		    | container	# TODO
+        */
+        private INode Module()
+        {
+            if (Match(TokenType.Word, "class"))
+                return Class();
+
+            throw new LeafsSyntaxException(Get(0).Position, "Cannot parse this module");
+        }
+
+        /*
+            access "class" name class_declaration 
+			| "class" name class_declaration
+        */
+        private INode Class()
+        {
+            Skip();     // "class"
+
+            if (!Check(TokenType.Word))
+                return null;
+
+            var name = Get(0).Value;
+            Skip();
+
+            if (!Check(TokenType.BlockStart))
+                throw new LeafsSyntaxException(Get(0).Position, "Class start expected");
+
+            var node = new ClassNode { Name = name };
+
+            var members = new List<INode>();
+            INode member;
+            while ((member = Member()) != null)
+            {
+                members.Add(member);
+            }
+
+            node.Members = members;
+
+            if (!Check(TokenType.BlockEnd))
+                throw new LeafsSyntaxException(Get(0).Position, "Class end expected");
+
+            Skip();     // Block end
+
+            return node;
+        }
+
+
+        /*
+            field
+			| property # TODO
+			| method
+			| constructor # TODO
+        */
+        private INode Member()
+        {
+            INode result;
+            if ((result = Field()) != null)
+                return result;
+
+            if ((result = Method()) != null)
+                return result;
+
+            return null;
+        }
+
+        /*
+            access identifier identifier ";"
+			| access identifier identifier "=" expression ";"
+        */
+        private INode Field()
+        {
+            if (!Check(TokenType.Word))     // Type name
+                return null;
+
+            var node = new ClassFieldNode();
+            node.TypeName = Get(0).Value;
+            Skip();
+
+            if (!Check(TokenType.Word))     // Name
+                return null;
+
+            node.Name = Get(0).Value;
+            Skip();
+
+            node.Expression = Expression();
+
+            return node;
+        }
+
+
+
+
+        /*
+            access identifier identifier "(" args ")" block_start 
+			    block_statement
+			block_end
+        */
+        private INode Method()
+        {
+            return null;
+        }
+
+        // TOOD
+        private INode Expression()
+        {
+            throw new NotImplementedException();
         }
     }
 }
+ 
