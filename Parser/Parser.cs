@@ -101,10 +101,13 @@ namespace LeafS.Parser
         */
         private INode Module()
         {
-            if (Match(TokenType.Word, "class"))
-                return Class();
+            var moduleNode = new ModuleNode();
+            moduleNode.Members = new List<INode>();
 
-            throw new LeafsSyntaxException(Get(0).Position, "Cannot parse this module");
+            while (Match(TokenType.Word, "class"))
+                moduleNode.Members.Add(Class());
+
+            return moduleNode;
         }
 
         /*
@@ -125,6 +128,9 @@ namespace LeafS.Parser
                 throw new LeafsSyntaxException(Get(0).Position, "Class start expected");
 
             var node = new ClassNode { Name = name };
+
+            // TODO Add access modifier
+            node.Access = AccessModifier.Public;
 
             var members = new List<INode>();
             INode member;
@@ -199,8 +205,96 @@ namespace LeafS.Parser
             return null;
         }
 
-        // TOOD
         private INode Expression()
+        {
+            INode result;
+            if ((result = Term()) != null)
+                return result;
+
+            if ((result = Expression()) != null)
+            {
+                if (!Check(TokenType.Plus) && !Check(TokenType.Minus))
+                    throw new LeafsSyntaxException(Get(0).Position, "Binary operator expected");
+
+                var op = Get(0).Value;
+                Skip();
+
+                var node = new BinaryOperationNode
+                {
+                    Operator = op,
+                    Left = result
+                };
+
+                if ((result = Term()) == null)
+                    throw new LeafsSyntaxException(Get(0).Position, "Right expression expected");
+
+                node.Right = result;
+
+                return node;
+            }
+
+            return null;
+        }
+
+        private INode Term()
+        {
+            INode result;
+            if ((result = Factor()) != null)
+                return result;
+
+            if ((result = Term()) != null)
+            {
+                if (!Check(TokenType.Star) && !Check(TokenType.Slash) && !Check(TokenType.Percent))
+                    throw new LeafsSyntaxException(Get(0).Position, "Expression expected");
+
+                var op = Get(0).Value;
+                Skip();
+
+                var node = new BinaryOperationNode
+                {
+                    Operator = op,
+                    Left = result
+                };
+
+                if ((result = Factor()) == null)
+                    throw new LeafsSyntaxException(Get(0).Position, "Expression expected");
+
+                node.Right = result;
+
+                return node;
+            }
+
+            return null;
+        }
+
+        private INode Factor()
+        {
+            INode result;
+            if ((result = Primary()) != null)
+                return result;
+
+            if (Check(TokenType.Plus) || Check(TokenType.Minus))
+            {
+                var op = Get(0).Value;
+                Skip();
+
+                var node = new UnaryOperationNode()
+                {
+                    Operator = op,
+                };
+
+                if ((result = Factor()) == null)
+                    throw new LeafsSyntaxException(Get(0).Position, "Expression expected");
+
+                node.Operand = result;
+
+                return node;
+            }
+
+            throw new LeafsSyntaxException(Get(0).Position, "");
+        }
+
+        private INode Primary()
         {
             throw new NotImplementedException();
         }

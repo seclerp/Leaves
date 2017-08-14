@@ -3,13 +3,13 @@ module				= class
 					| component	# TODO
 					| container	# TODO
 
-access				= "private" 
-					| "protected" 
-					| "public"
+access				= PRIVATE
+					| PROTECTED
+					| PUBLIC
 
 # OOP
-class				= access "class" name class_declaration 
-					| "class" name class_declaration
+class				= access TYPE name class_declaration 
+					| TYPE name class_declaration
 
 class_declaration	= block_start class_members block_end
 
@@ -22,9 +22,9 @@ class_member		= field
 					| constructor # TODO
 
 field				= access identifier identifier ";"
-					| access identifier identifier "=" expression ";"
+					| access identifier identifier ASSIGN expression ";"
 
-method				= access identifier identifier "(" args ")" block_start 
+method				= access identifier identifier LPAREN args RPAREN block_start 
 						  block_statement
 					  block_end
 
@@ -36,12 +36,62 @@ statement			= assign_statement
 					| loop_statement
 					| print_statement
 
-newvar_statement	= identifier identifier "=" expression ";"	
+newvar_statement	= identifier identifier ASSIGN expression ";"	
 
-assign_statement	= identifier "=" expression ";"		
+assign_statement	= identifier ASSIGN expression ";"		
 
 loop_statement		= for_statement	# TODO
 					| while_statement	# TODO
 					| do_statement	# TODO
 
-print_statement		= "print" expression ";"
+print_statement		= PRINT expression ";"
+
+expression			= 
+
+expression			= term
+					| expression PLUS term
+					| expression MINUS term
+
+term				= factor
+					| term STAR factor
+					| term SLASH factor
+					| term PERCENT factor
+
+factor				= primary
+					| MINUS factor
+					| PLUS factor
+
+primary				= IDENTIFIER
+					| NUMBER
+					| STRING
+					| LPAREN expression RPAREN
+
+
+# Lexems
+
+#№ Static
+
+PRIVATE				= "private"
+PROTECTED			= "protected"
+INTERNAL			= "internal"
+PUBLIC				= "public"
+
+TYPE				= "type"
+VALTYPE				= "valtype"
+
+ASSIGN				= "="
+LPAREN				= "("
+RPAREN				= ")"
+
+PLUS				= "+"
+MINUS				= "-"
+STAR				= "*"
+SLASH				= "/"
+PERCENT				= "%"
+
+#№ Dynamic
+
+IDENTIFIER			= \p{L}[\w\`\$]
+NUMBER				= [0-9]+(\.[0-9]+)?
+STRING				= \"((?:[^\"\\]|\\.)*)\"
+					| \'((?:[^\'\\]|\\.)*)\'
