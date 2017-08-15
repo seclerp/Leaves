@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace LeafS.Testing
+﻿namespace LeafS.Testing
 {
     public class UnitTests
     {

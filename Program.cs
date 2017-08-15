@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using LeafS.Complier;
 
 namespace LeafS
 {
@@ -43,9 +44,9 @@ namespace LeafS
                 }
             } while (true);
 
-            Stopwatch watch = new Stopwatch();
+            var watch = new Stopwatch();
 
-            var compiler = new Complier.Compiler();
+            var compiler = new Compiler();
             watch.Start();
 
             compiler.Compile("test.exe", "code.lfs");

@@ -1,8 +1,8 @@
 ﻿using LeafS.Complier;
 
-namespace LeafS.AST.Nodes
+namespace LeafS.AST.Nodes.Leafs
 {
-    class NumberLiteralNode : SimpleNode
+    internal class NumberLiteralNode : LeafNode
     {
         public override void Emit(Context context)
         {

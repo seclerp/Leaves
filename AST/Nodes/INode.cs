@@ -5,7 +5,7 @@ namespace LeafS.AST.Nodes
 {
     public interface INode
     {
-        void Emit(Context context);
         TokenPosition CodePosition { get; set; }
+        void Emit(Context context);
     }
 }

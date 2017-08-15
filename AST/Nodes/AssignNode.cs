@@ -3,7 +3,7 @@ using LeafS.Lexer;
 
 namespace LeafS.AST.Nodes
 {
-    class AssignNode : INode
+    internal class AssignNode : INode
     {
         public string Name { get; set; }
         public INode Expression { get; set; }

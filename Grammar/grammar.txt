@@ -46,25 +46,7 @@ loop_statement		= for_statement	# TODO
 
 print_statement		= PRINT expression ";"
 
-expression			= 
-
-expression			= term
-					| expression PLUS term
-					| expression MINUS term
-
-term				= factor
-					| term STAR factor
-					| term SLASH factor
-					| term PERCENT factor
-
-factor				= primary
-					| MINUS factor
-					| PLUS factor
-
-primary				= IDENTIFIER
-					| NUMBER
-					| STRING
-					| LPAREN expression RPAREN
+expression			= *Shunting-yard algorithm by Dijikstra*
 
 
 # Lexems

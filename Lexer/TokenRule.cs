@@ -15,9 +15,11 @@ namespace LeafS.Lexer
             UseMask = useMask;
         }
 
-        public Regex Regex { get; private set; }
+        public Regex Regex { get; }
+
         // If not equals -1 uses submask result and not full result
-        public int UseMask { get; private set; }
+        public int UseMask { get; }
+
         public TokenType Type { get; protected set; }
         public bool IsIgnored { get; protected set; }
     }

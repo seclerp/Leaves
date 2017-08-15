@@ -25,10 +25,13 @@ namespace LeafS.Complier
                 var asm = AssemblyDefinition.CreateAssembly(name, outputFileName, ModuleKind.Console);
 
                 // импортируем в библиотеку типы string и void
-                var stringImport = asm.MainModule.Import(typeof(String));
+                var stringImport = asm.MainModule.Import(typeof(string));
                 var voidImport = asm.MainModule.Import(typeof(void));
-                var type = new TypeDefinition("LeafSTest", "Program", TypeAttributes.AutoClass | TypeAttributes.Public | TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit, asm.MainModule.Import(typeof(object)));
-                var method = new MethodDefinition("Main", MethodAttributes.Static | MethodAttributes.Private | MethodAttributes.HideBySig, voidImport);
+                var type = new TypeDefinition("LeafSTest", "Program",
+                    TypeAttributes.AutoClass | TypeAttributes.Public | TypeAttributes.AnsiClass |
+                    TypeAttributes.BeforeFieldInit, asm.MainModule.Import(typeof(object)));
+                var method = new MethodDefinition("Main",
+                    MethodAttributes.Static | MethodAttributes.Private | MethodAttributes.HideBySig, voidImport);
                 // сохраняем короткую ссылку на генератор кода
                 var ip = method.Body.GetILProcessor();
 

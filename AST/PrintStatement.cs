@@ -23,7 +23,8 @@ namespace LeafS.AST
         public void Emit(Context context)
         {
             context.Processor.Emit(OpCodes.Ldstr, Argument.Value.ToString());
-            context.Processor.Emit(OpCodes.Call, context.Module.Def.Import(typeof(Console).GetMethod("WriteLine", new [] { typeof( string ) })));
+            context.Processor.Emit(OpCodes.Call,
+                context.Module.Def.Import(typeof(Console).GetMethod("WriteLine", new[] {typeof(string)})));
         }
     }
 }

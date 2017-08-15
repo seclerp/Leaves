@@ -3,10 +3,10 @@ using LeafS.Lexer;
 
 namespace LeafS.AST.Nodes
 {
-    class UnaryOperationNode : INode
+    internal class UnaryOperationNode : INode
     {
-        public INode Operand { get; set; }
         public string Operator;
+        public INode Operand { get; set; }
 
         public void Emit(Context context)
         {

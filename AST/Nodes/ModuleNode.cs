@@ -4,7 +4,7 @@ using LeafS.Lexer;
 
 namespace LeafS.AST.Nodes
 {
-    class ModuleNode : INode
+    internal class ModuleNode : INode
     {
         public List<INode> Members { get; set; }
 
