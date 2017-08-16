@@ -1,42 +1,37 @@
 ﻿# General parts
-module				= class 
+module				= 
+					(
+					  class 
 					| component	# TODO
 					| container	# TODO
+					) EOF
 
 access				= PRIVATE
 					| PROTECTED
 					| PUBLIC
 
 # OOP
-class				= access TYPE name class_declaration 
-					| TYPE name class_declaration
+class				= [access] TYPE | VALTYPE name type_declaration 
 
-class_declaration	= block_start class_members block_end
+type_declaration	= block_start { type_member } block_end
 
-class_members		= class_member 
-					| class_member class_members
-
-class_member		= field
+type_member			= field
 					| property # TODO
 					| method
 					| constructor # TODO
 
-field				= access identifier identifier ";"
-					| access identifier identifier ASSIGN expression ";"
+field				= [access] [STATIC] FIELD identifier ":" identifier ["=" expression] ";"
 
 method				= access identifier identifier LPAREN args RPAREN block_start 
-						  block_statement
+						  {statement}
 					  block_end
-
-block_statement		= statement
-					| statement block_statement
 
 statement			= assign_statement
 					| newvar_statement
 					| loop_statement
 					| print_statement
 
-newvar_statement	= identifier identifier ASSIGN expression ";"	
+newvar_statement	= VAR identifier (":" identifier [ASSIGN expression]) | ([":" identifier] ASSIGN expression) ";"
 
 assign_statement	= identifier ASSIGN expression ";"		
 
@@ -46,8 +41,52 @@ loop_statement		= for_statement	# TODO
 
 print_statement		= PRINT expression ";"
 
-expression			= *Shunting-yard algorithm by Dijikstra*
+expression			= block1 {sign1, block1} # TODO: ["as" type_name]
 
+sign1				= ANDAND
+					| OROR
+					| XORXOR
+
+block1				= block2 [sign2, block2]
+
+sign2				= EQUALS 
+					| NOTEQUALS 
+					| LT 
+					| GT 
+					| LTEQUALS
+					| GTEQUALS
+
+block2				= [MINUS | NOT] block3 {sign3 block3}
+
+sign3				= MINUS
+					| PLUS
+
+block3				= block4 {sign4 block4}
+
+sign4				= STAR | SLASH | PERCENT
+
+block4				= block5 {sign5 block5}
+
+sign5				= DASHOK
+
+block5				= block6 {sign6 block6}
+
+sign6				= AND 
+					| OR 
+					| XOR
+
+block6				= block7 {DOT (accessor | index)}
+
+block7				= block8 [".." block8]
+
+block8				= IDENTIFIER
+					| literal 
+					| newobj 
+					| "null"
+					| ("(" expr ")")
+
+literal				= NUMBER
+					| STRING
 
 # Lexems
 
@@ -57,6 +96,8 @@ PRIVATE				= "private"
 PROTECTED			= "protected"
 INTERNAL			= "internal"
 PUBLIC				= "public"
+
+STATIC				= "static"
 
 TYPE				= "type"
 VALTYPE				= "valtype"
