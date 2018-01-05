@@ -1,0 +1,110 @@
+﻿// Comments
+/* Multiline */
+
+let a = 5;		// Semicolons are optional
+// or
+let a:int = 5	// Explicit type
+// or
+let a:int		// Without value (default)
+
+// Types ar NOT dynamic (but inferenced)
+
+// If
+if a > 5:
+  // Blocks using identation
+  doSomething()
+
+// For
+for (i:int = 0, i<5, i++):
+  // Something
+
+// For in (foreach)
+for item in list:
+  // Something
+
+// Functions explicit return type is optional
+let f1 (a, b, c):
+  return a + b + c
+
+// Without arguments
+let f2: 
+  print("Hello")
+
+// Lambda-expressions
+let f3 (a, b, c) => a + b + c
+let f4 => a + b + c
+
+// Some "magic" things
+let c = (a, b)		// a tuple
+
+let a, b = 1, 2		// Multivalue
+let a = 1, b = 2
+
+a, b = b, a			// Var switch
+
+// List
+let list1 = (1, 2, 3, 4)
+
+// Array
+let array1 = [1, 2, 3, 4]
+// Arrays are immutable lists
+
+// Tuple
+let tuple1 = {1, 2, 3, 4}
+// Tuples are immutable lists with named values
+
+let listOrArrayLength = #listOrArray	// Length of list or array
+
+a, b = b, a // Swap
+// or
+swap a, b
+
+// Tuple, array, list unpack
+let a, b <- {1, 2}
+let a <- (1, 2, 3, 4)
+
+// Sequentional function call
+let sum (a, b) => a + b
+let mod (a, b) => a * b
+
+sum(2, 3) 
+  -> mod(5) 
+  -> sum(3)
+
+// (2 + 3) * 5 + 3
+
+
+// Leaf - some sugar over classes, modules with own algebra
+
+
+// Data leaf
+leaf data SomeLeaf(
+	  a:int, 
+	  b:string, 
+	  c:float
+  ):
+
+  // Before data inserting
+  over before:
+	print(this.a)				// this - access to current context, Error: data wasn't inserted yet
+  over after:
+    print(this.a)				// OK
+	// After data inserting
+
+leaf data SomeOtherDataLeaf2(g:int, h:int, j:int)
+leaf data SomeOtherDataLeaf(d:int, e:int, f:int)
+  include SomeOtherDataLeaf2		// Not inheritanse, but composition
+
+// Using leafs
+
+let leaf1 = SomeLeaf(1, '2', 3.123)
+// data leaf
+let leaf2 = leaf1 >>> SomeOtherDataLeaf(1, 2, 3) // leaf2 now has a, b, c, d, e, f
+// let leaf3 = leaf2 >>> leaf1 // Error: repeating data members
+let leaf3 = leaf1 * 2		// Math operations like in vectors
+
+// Literals
+// "231" or '213' - string
+// 23 - int
+// 1.234 - float
+// 
