@@ -10,24 +10,39 @@ let a:int		// Without value (default)
 // Types ar NOT dynamic (but inferenced)
 
 // If
-if a > 5:
+if a > 5 =>
   // Blocks using identation
   doSomething()
 
+// If else
+if 1 == 1 then
+  // ...
+else
+  // ...
+
+// Switch
+let a = 25
+match a =>
+  when 13 =>
+    print "a is 13"
+  ...
+  otherwise =>
+    print "Can't say what a is"
+
 // For
-for (i:int = 0, i<5, i++):
+for (i = 0, i<5, i++) =>
   // Something
 
 // For in (foreach)
-for item in list:
+for item in list =>
   // Something
 
 // Functions explicit return type is optional
-let f1 (a, b, c):
+let f1 (a, b, c) =>
   return a + b + c
 
 // Without arguments
-let f2: 
+let f2 =>
   print("Hello")
 
 // Lambda-expressions
@@ -67,18 +82,13 @@ let a <- (1, 2, 3, 4)
 let sum (a, b) => a + b
 let mod (a, b) => a * b
 
-sum(2, 3) 
-  -> mod(5) 
-  -> sum(3)
-
+sum 2, 3 
+  -> mod 5 
+  -> sum 3
 // (2 + 3) * 5 + 3
 
-
-// Leaf - some sugar over classes, modules with own algebra
-
-
-// Data leaf
-leaf data SomeLeaf(
+// Data struct
+data SomeData(
 	  a:int, 
 	  b:string, 
 	  c:float
@@ -86,14 +96,14 @@ leaf data SomeLeaf(
 
   // Before data inserting
   over before:
-	print(this.a)				// this - access to current context, Error: data wasn't inserted yet
+	print @a				// @ - access to current context (this), Error: data wasn't inserted yet
   over after:
-    print(this.a)				// OK
+    print @a				// OK
 	// After data inserting
 
-leaf data SomeOtherDataLeaf2(g:int, h:int, j:int)
-leaf data SomeOtherDataLeaf(d:int, e:int, f:int)
-  include SomeOtherDataLeaf2		// Not inheritanse, but composition
+data SomeOtherDataStruct(g:int, h:int, j:int)
+data SomeOtherDataStruct2(d:int, e:int, f:int)
+  include SomeOtherDataStruct2		// Not inheritanse, but composition
 
 // Using leafs
 
@@ -104,7 +114,24 @@ let leaf2 = leaf1 >>> SomeOtherDataLeaf(1, 2, 3) // leaf2 now has a, b, c, d, e,
 let leaf3 = leaf1 * 2		// Math operations like in vectors
 
 // Literals
-// "231" or '213' - string
-// 23 - int
-// 1.234 - float
-// 
+"231" // or '213' - string
+23 // - int
+1.234 // - float
+"${12 + 3} = 15" // - string interpolation
+
+// All statements are return values, so they are expressions
+let a = if 5 > 1 then 
+
+let a = [for i in [1..5] -> i * 2]	// [2, 4, 6, 8, 10]
+
+// Functional programming elements
+// Map, reduce and filter functions
+let b = filter (1..10), (i) => i % 2 == 0		// (2, 4, 6, 8)
+		-> map (i) => i * 2						// (4, 8, 16, 24)
+		-> reduce (x, xs) => x + xs		// 52, or -> sum
+// also works for arrays
+
+// ! means immutable
+!let a = 5
+
+a = 10		// Error: a is immutable

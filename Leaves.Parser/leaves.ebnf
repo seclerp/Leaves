@@ -1,0 +1,162 @@
+﻿(* // comment *)
+(* /* comment */ *)
+
+(* Core *)
+statement = 
+    (
+        declaration 
+        | expression,
+        [semicolon]
+    ) 
+    | {statement}
+;
+
+expression = 
+    math_expression
+    | if_expression
+;
+
+(* Math expressions *)
+math_expression = 
+    term2, { (plus | minus), term2 }
+;
+
+term2 = 
+    term3, { (asterisk | slash), term3 }
+;
+
+term3 = 
+    unary, { (circumflex), unary }
+;
+
+unary = 
+    ([plus | minus], (lparent, expression, rparen) | identifier | number)
+    | literal
+;
+
+literal =
+    list_literal
+    | array_literal
+    | tuple_literal
+    | string
+    | number
+    | bool
+;
+
+(*  let abc = 2;
+    let abc:int
+    let abc:int = 2
+
+    let f1 => print "123"
+    let f2:int => 2 + 2
+    let f3 (a, b) => a + b
+    let f4:int (a:int, b:int) => 234
+ *)
+declaration =
+    (
+        [immutable], let,
+        (identifier, type_decl) | (identifier, [type_decl], equals, expression)
+    )
+    | 
+    (
+        let, identifier, [type_decl], [lparen, arguments_list, rparen], lambda, expression
+    )
+;
+
+type_identifier =
+    identifier, ["<", type_identifier, ">"]
+;
+
+type_decl = 
+    ":", type_identifier
+;
+
+(* Comma-separated "lists" *)
+(* a, b, c, d *)
+identifier_list =
+    identifier, {",", arguments_list}
+;
+
+(* (2 + 3), 15, a *)
+expression_list =
+    expression, {",", expression_list}
+;
+
+(* a:int, b:float, c *)
+arguments_list =
+    identifier, [type_decl], {",", arguments_list}
+;
+
+(* Assignment *)
+(* a = 5 *)
+(* a, b = b, a *)
+assignment = 
+    identifier_list, equals, expression_list
+;
+
+(* Coditions *)
+if_expression = 
+    if_lambda | if_then
+;
+
+(* if a == 5 => do_something *)
+if_lambda = 
+    if, expression, lambda, 
+    statement
+;
+
+(* if a == 5 then do_something else do_another_something*)
+if_then =
+    if, expression, then, 
+    statement, 
+    [else, statement]
+;
+
+(* option a =>
+     when 13 =>
+       print "a is 13"
+     ...
+     otherwise =>
+       print "Can't say what a is"
+*)
+option_expression =
+    option, identifier, lambda, 
+    {when, lambda, statement}, 
+    [otherwise, lambda, statement]
+;
+
+(* Function call *)
+(* func1(a, 1, 2) *)
+(* func1 a, 1, 2 *)
+fcall_expression =
+    (identifier, expression_list)
+    | (identifier, lparent, expression_list, rparen)
+;
+
+(* List literals *)
+(* (1, 2, 3, 4) *)
+list_literal =
+    ("(", 
+        [ (expression_list) | (range_expression) ],
+    ")")
+;
+
+(* Array literals *)
+(* [1, 2, 3, 4] *)
+array_literal =
+    ("[", 
+        [ (expression_list) | (range_expression) ],
+    "]")
+;
+
+(* Tuple literal*)
+(* {1, 2} *)
+tuple_literal =
+    ("[", [ (expression_list) ], "]")
+;
+
+(* Range *)
+(* 1..10:2 - from 1 to 10 step 2 *)
+range_expression =
+    expression, "..", expression, [":", expression]
+;
