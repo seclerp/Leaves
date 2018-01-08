@@ -30,7 +30,7 @@ match a =>
     print "Can't say what a is"
 
 // For
-for (i = 0, i<5, i++) =>
+for let i in [1..10:1] =>
   // Something
 
 // For in (foreach)

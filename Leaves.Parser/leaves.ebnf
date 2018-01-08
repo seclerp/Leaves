@@ -2,6 +2,22 @@
 (* /* comment */ *)
 
 (* Core *)
+this =
+    "@"
+;
+
+identifier_base = 
+    character | "_" | "$", {character | integer | "_" | "$"}
+;
+
+identifier_name =
+    identifier_base, [{"[", expression, "]"}], {".", identifier_name}
+;
+
+identifier =
+    [this], identifier_name
+;
+
 statement = 
     (
         declaration 
@@ -17,30 +33,47 @@ expression =
 ;
 
 (* Math expressions *)
-math_expression = 
-    term2, { (plus | minus), term2 }
+math_expression =
+    plus_minus_term
 ;
 
-term2 = 
+plus_minus_term = 
+    term2, { (plus | minus), asterisk_slash }
+;
+
+asterisk_slash_term = 
     term3, { (asterisk | slash), term3 }
 ;
 
-term3 = 
-    unary, { (circumflex), unary }
+circumflex_term = 
+    plust_minus_unary, { (circumflex), plust_minus_unary }
 ;
 
-unary = 
-    ([plus | minus], (lparent, expression, rparen) | identifier | number)
-    | literal
+plust_minus_unary = 
+    ([plus | minus], (lparent, expression, rparen) | sharp_unary)
 ;
 
-literal =
+(* Get lenght operator *)
+sharp_unary =
+    (["#"], collection_literal) | (["#"], identifier) | simple_literal
+;
+
+(* Literals *)
+collection_literal =
     list_literal
     | array_literal
     | tuple_literal
-    | string
+;
+
+simple_literal =
+    string
     | number
     | bool
+;
+
+literal =
+    collection_literal
+    | simple_literal
 ;
 
 (*  let abc = 2;
