@@ -1,20 +1,16 @@
 ﻿namespace Leaves.Parser
 
-open FParsec.CharParsers
+open FParsec
 
 module public Language =
-
-    let private test parser inputStr =
-        match run parser inputStr with
-        | Success(result, _, _) -> printf "Success: %A" result
-        | Failure(errMsg, _, _) -> printf "Error: %s" errMsg
+    let ParseInput input =
+        let ws = spaces // skips any whitespace
+        let str_ws s = pstring s >>. ws
+        let number = pfloat .>> ws
         
-    // Parses float (2.25) and prints on screen
-    let public ParseFloat inputStr =
-        test pfloat inputStr
-
-    // Parses float (2.25) and prints on screen
-    let public ParseFloat inputStr =
-        test pfloat inputStr
-
+        let opp = new OperatorPrecedenceParser<float, unit, unit>()
+        let expr = opp.ExpressionParser
+        opp.TermParser <- number <|> between (str_ws "(") (str_ws ")") expr
+                
+        
     
