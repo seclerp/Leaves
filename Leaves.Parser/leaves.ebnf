@@ -11,11 +11,11 @@ identifier =
 ;
 
 identifier_path =
-    [ this ], identifier_name, [{"[", expression, "]"}], {".", identifier_path}
+    [ this ], identifier_name, [ { "[", expression, "]" } ], { ".", identifier_path }
 ;
 
 expression = 
-    { single_expression, [semicolon] } 
+    { single_expression, [ semicolon ] } 
 ;
 
 single_expression = 
@@ -26,7 +26,6 @@ single_expression =
     | loop_control_expression
     | fcall_expression
     | function_control_expression
-    | 
 ;
 
 (* Math expressions *)
@@ -35,24 +34,24 @@ math_expression =
 ;
 
 plus_minus_term = 
-    term2, { (plus | minus), asterisk_slash }
+    term2, { ( plus | minus ), asterisk_slash }
 ;
 
 asterisk_slash_term = 
-    term3, { (asterisk | slash), term3 }
+    term3, { ( asterisk | slash ), term3 }
 ;
 
 circumflex_term = 
-    plus_minus_unary, { (circumflex), plus_minus_unary }
+    plus_minus_unary, { ( circumflex ), plus_minus_unary }
 ;
 
 plus_minus_unary = 
-    ([plus | minus], (lparent, single_expression, rparen) | sharp_unary)
+    ( [ plus | minus ], ( lparent, single_expression, rparen ) | sharp_unary )
 ;
 
 (* Get lenght operator *)
 sharp_unary =
-    ("#", single_expression) 
+    ( "#", single_expression ) 
     | literal_or_identifier
 ;
 
@@ -98,20 +97,20 @@ declaration_expression =
 ;
 
 variable_declaration = 
-    [immutable], [lazy], let, 
-    ( (identifier, type_decl) | (identifier, [type_decl], equals, single_expression) )
+    [ immutable ], [ lazy ], let, 
+    ( ( identifier, type_decl ) | ( identifier, [ type_decl ], equals, single_expression ) )
 ;
 
 function_declaration =
-    only_declaration, [lparen, arguments_list, rparen], lambda, expression
+    only_declaration, [ lparen, arguments_list, rparen ], lambda, expression
 ;
 
 only_declaration =
-    [immutable], [lazy], let, identifier, [type_decl]
+    [ immutable ], [ lazy ], let, identifier, [ type_decl ]
 ;
 
 type_identifier =
-    identifier, ["<", type_identifier, ">"]
+    identifier, [ "<", type_identifier, ">" ]
 ;
 
 type_decl = 
@@ -131,7 +130,7 @@ expression_list =
 
 (* a:int, b:float, c *)
 arguments_list =
-    identifier, [type_decl], {",", arguments_list}
+    identifier, [ type_decl ], { ",", arguments_list }
 ;
 
 (* Assignment *)

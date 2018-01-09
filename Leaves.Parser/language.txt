@@ -22,7 +22,7 @@ else
 
 // Switch
 let a = 25
-match a =>
+option a =>
   when 13 =>
     print "a is 13"
   ...
@@ -49,25 +49,24 @@ do =>
   // Something
 forever     // Forever - always true loop
 
-// Functions explicit return type is optional
+// Functions 
+// Explicit return type is optional
 let f1 (a, b, c) =>
-  return a + b + c
+  a + b + c
 
 // Without arguments
-let f2 =>
-  print("Hello")
+let f2 => print("Hello")
 
 // With arguments
 let f3 (a, b, c) => a + b + c
 // Braces are optional
 let f3 a, b, c => a + b + c
 
-// Some "magic" things
 let c = (a, b)		// a tuple
 
+// Some "magic" things
 let a, b = 1, 2		// Multivalue declaration
 let a = 1, b = 2
-
 a, b = b, a			// Multivalue assignment
 // or, another approach to swap
 swap a, b
@@ -124,7 +123,7 @@ let leaf2 = leaf1 >>> SomeOtherDataLeaf(1, 2, 3) // leaf2 now has a, b, c, d, e,
 // All statements are return values, so they can be used in another expressions as values
 let a = if 5 > 1 then 
 
-let a = [for i in [1..5] -> i * 2]	// [2, 4, 6, 8, 10]
+let a = [for i in [1..5] => i * 2]	// [2, 4, 6, 8, 10]
 
 // Functional programming elements
 // Map, reduce and filter functions
