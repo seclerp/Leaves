@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Leaves.Parser.fs" />
+    <Content Include="leaves.ebnf" />
     <None Include="packages.config" />
     <None Include="Script.fsx" />
     <Content Include="language.txt" />

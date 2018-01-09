@@ -3,12 +3,6 @@
 open FParsec.CharParsers
 
 module public Language =
-    let Literal =
-        | Number of float
-        | String of string
-        | Identifier of string
-
-    
 
     let private test parser inputStr =
         match run parser inputStr with

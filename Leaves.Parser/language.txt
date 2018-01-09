@@ -33,9 +33,21 @@ match a =>
 for let i in [1..10:1] =>
   // Something
 
-// For in (foreach)
 for item in list =>
   // Something
+
+// While
+while a > 5 =>
+  // Something
+
+// Do - while
+do =>
+  // Something
+while a > 6
+   
+do =>
+  // Something
+forever     // Forever - always true loop
 
 // Functions explicit return type is optional
 let f1 (a, b, c) =>
@@ -45,17 +57,20 @@ let f1 (a, b, c) =>
 let f2 =>
   print("Hello")
 
-// Lambda-expressions
+// With arguments
 let f3 (a, b, c) => a + b + c
-let f4 => a + b + c
+// Braces are optional
+let f3 a, b, c => a + b + c
 
 // Some "magic" things
 let c = (a, b)		// a tuple
 
-let a, b = 1, 2		// Multivalue
+let a, b = 1, 2		// Multivalue declaration
 let a = 1, b = 2
 
-a, b = b, a			// Var switch
+a, b = b, a			// Multivalue assignment
+// or, another approach to swap
+swap a, b
 
 // List
 let list1 = (1, 2, 3, 4)
@@ -68,11 +83,7 @@ let array1 = [1, 2, 3, 4]
 let tuple1 = {1, 2, 3, 4}
 // Tuples are immutable lists with named values
 
-let listOrArrayLength = #listOrArray	// Length of list or array
-
-a, b = b, a // Swap
-// or
-swap a, b
+let listOrArrayLength = #listOrArray	// # - Length of list or array
 
 // Tuple, array, list unpack
 let a, b <- {1, 2}
@@ -82,44 +93,35 @@ let a <- (1, 2, 3, 4)
 let sum (a, b) => a + b
 let mod (a, b) => a * b
 
-sum 2, 3 
-  -> mod 5 
-  -> sum 3
+sum 2, 3 -> mod 5 -> sum 3
 // (2 + 3) * 5 + 3
 
 // Data struct
-data SomeData(
-	  a:int, 
-	  b:string, 
-	  c:float
-  ):
-
+data SomeData(a:int, b:string, c:float) =>
   // Before data inserting
-  over before:
+  before =>
 	print @a				// @ - access to current context (this), Error: data wasn't inserted yet
-  over after:
+  after =>
     print @a				// OK
 	// After data inserting
 
 data SomeOtherDataStruct(g:int, h:int, j:int)
 data SomeOtherDataStruct2(d:int, e:int, f:int)
-  include SomeOtherDataStruct2		// Not inheritanse, but composition
+  include SomeOtherDataStruct2		// Not inheritance, but composition
 
-// Using leafs
-
+// Using data structs
 let leaf1 = SomeLeaf(1, '2', 3.123)
-// data leaf
+// Composition of data-objects
 let leaf2 = leaf1 >>> SomeOtherDataLeaf(1, 2, 3) // leaf2 now has a, b, c, d, e, f
 // let leaf3 = leaf2 >>> leaf1 // Error: repeating data members
-let leaf3 = leaf1 * 2		// Math operations like in vectors
 
-// Literals
+// Simple literals
 "231" // or '213' - string
 23 // - int
 1.234 // - float
 "${12 + 3} = 15" // - string interpolation
 
-// All statements are return values, so they are expressions
+// All statements are return values, so they can be used in another expressions as values
 let a = if 5 > 1 then 
 
 let a = [for i in [1..5] -> i * 2]	// [2, 4, 6, 8, 10]
@@ -134,4 +136,22 @@ let b = filter (1..10), (i) => i % 2 == 0		// (2, 4, 6, 8)
 // ! means immutable
 !let a = 5
 
-a = 10		// Error: a is immutable
+// Types (classes)
+type SomeType extends SomeOtherType =>
+  let a:int          // Fields, private by default
+  prop b:int         // Auto-properties, public by default
+  prop c:int =>      // Normal properties
+    set => a = value
+    get => a
+
+  ctor =>            // Constructor without params
+    // Something
+
+  ctor e:string =>
+    @a = System.Convert.ToInt32 a
+    
+  private let somePrivateMethod => doSomething()        // Type functions (methods)
+  over SomeOverrideMethod someArgument:Exception =>     // Type function override (mmethod override)
+    error someArgument
+    
+  
