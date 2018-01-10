@@ -3,10 +3,6 @@ open FParsec
 
 module Ast =
 
-    type Grammar = Definition list
-    type Definition = string * Expression
-    type Expression = SingleExpression list
-
     type Identifier = string
 
     type SingleExpression = 
@@ -19,77 +15,75 @@ module Ast =
         | LoopControlExpression
         | FunctionCallExpression
         | FunctionControlExpression
-
+    type Expression = SingleExpression list
+    
     type DeclarationExpression = 
         | VariableDeclaration
         | FunctionDeclaration
         | DataStructureDeclaration
         | TypeStructureDeclaration
-    type VariableDeclaration =
-        name of Identifier * 
-        type of Identifier
-        value of SingleExpression *
-        valueType of ValueType
     type ValueType =
         | Default
         | Immutable
         | Lazy
         | LazyImmutable
+    type VariableDeclaration =
+        ValueType *                 // immutable, lazy
+        Identifier *                // name
+        Identifier *                // type name
+        SingleExpression            // value
+
     type FunctionDeclaration =
-        name of Identifier * 
-        arguments of VariableDeclaration list *
-        returnType of Identifier *
-        body of Expression *
-        functionType of ValueType
+        ValueType *                                 // immutable, lazy
+        Identifier *                                // name
+        VariableDeclaration list *                  // arguments list
+        Identifier *                                // return type name
+        Expression                                  // body
     type DataStructureDeclaration =
-        name of Identifier * 
-        values of VariableDeclaration list *
-        before of Expression *
-        after of Expression
-    type TypeStructureDeclaration =
-        name of Identifier * 
-        extends of Identifier *
-        implements of Identifier *
-        genericWhere of Identifier * Identifier *
-        members of TypeMemberDeclaration list
+        Identifier *                                // name
+        VariableDeclaration list *                  // values
+        Expression *                                // before insert
+        Expression                                  // after insert
     type TypeMemberDeclaration =
         | FieldDeclaration
         | MethodDeclaration
         | PropertyDeclaration
-    type FieldDeclaration =
-        accessLevel of AccessLevel *
-        declaration of VariableDeclaration
-    type MethodDeclaration =
-        accessLevel of AccessLevel *
-        declaration of FunctionDeclaration
-    type PropertyDeclaration =
-        accessLevel of AccessLevel *
-        name of Identifier *
-        defaultValue of SingleExpression *
-        get of Expression *
-        set of Expression
     type AccessLevel =
         | Public
         | Protected
         | Internal
         | ProtectedInternal
         | Private
+    type TypeStructureDeclaration =
+        Identifier *                                // name
+        Identifier *                                // extends type name
+        Identifier *                                // implements type name
+        Identifier * Identifier *                   // generic where
+        TypeMemberDeclaration list                  // members
+    type FieldDeclaration =
+        AccessLevel *                               // access level
+        VariableDeclaration                         // declaration
+    type MethodDeclaration =
+        AccessLevel *                               // access level
+        FunctionDeclaration                         // declaration
+    type PropertyDeclaration =
+        AccessLevel *                               // access level
+        Identifier *                                // name
+        SingleExpression *                          // default value
+        Expression *                                // get
+        Expression                                  // set
 
     type AssignmentExpression =
-        identifiers of Identifier list
-        values of SingleExpression list
-
-    type UnaryExpression = 
-        operation of UnaryOperation *
-        a of Identifier
+        Identifier list *                           // identifiers
+        SingleExpression list                       // values
+        
     type UnaryOperation = 
         | Minus
         | GetLength
-    
-    type BinaryExpression = 
-        a of Identifier * 
-        operation of UnaryOperation * 
-        b of Identifier
+    type UnaryExpression = 
+        UnaryOperation *                            // operation
+        Identifier                                  // operand
+        
     type BinaryOperation = 
         | Plus
         | Minus
@@ -97,47 +91,57 @@ module Ast =
         | Slash
         | Percent
         | Arrow
+        | Equals
+        | NotEquals
+        | GreaterThan
+        | LessThan
+        | GreaterEqualsThan
+        | LessEqualsThan
+    type BinaryExpression = 
+        Identifier *                                // first operand
+        BinaryOperation *                           // operation
+        Identifier                                  // second operand
 
     type ConditionExpression =
         | IfExpression
         | IfElseExpression
         | OptionExpression
     type IfExpression =
-        condition of SingleExpression *
-        body of Expression
+        SingleExpression *                          // condition
+        Expression                                  // body
     type IfElseExpression =
-        condition of SingleExpression *
-        ifBody of Expression *
-        elseBody of Expression
-    type OptionExpression =
-        identifier of Identifier *
-        cases of WhenExpression list
+        SingleExpression *                          // condition
+        Expression *                                // if body
+        Expression                                  // else body
     type WhenExpression =
-        case of SingleExpression
-        body of Expression
+        SingleExpression *                          // case
+        Expression                                  // body
+    type OptionExpression =
+        Identifier *                                // identifier
+        WhenExpression list                         // cases
     
     type LoopExpression =
         | ForExpression
         | WhileExpression
         | DoWhileExpression
     type ForExpression =
-        counterIdentifier of Identifier
-        collection of SingleExpression
-        body of Expression
+        Identifier *                                // counter
+        SingleExpression *                          // collection
+        Expression                                  // body
     type WhileExpression =
-        condition of SingleExpression *
-        body of Expression  
+        SingleExpression *                          // condition
+        Expression                                  // body
     type DoWhileExpression =
-        body of Expression *
-        condition of SingleExpression
+        Expression *                                // body
+        SingleExpression                            // condition
 
     type LoopControlExpression =
         | Next
         | Break
 
     type FunctionCallExpression =
-        name of Identifier *
-        parameters of SingleExpression list
+        Identifier *                                // name
+        SingleExpression list                       // parameters
 
     type FunctionControlExpression =
         | Return
