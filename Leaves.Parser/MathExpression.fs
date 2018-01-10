@@ -15,6 +15,7 @@ module MathExpression =
     operatorPrecedenceParser.AddOperator(InfixOperator("-", ws, 1, Associativity.Left, (-)))
     operatorPrecedenceParser.AddOperator(InfixOperator("*", ws, 2, Associativity.Left, (*)))
     operatorPrecedenceParser.AddOperator(InfixOperator("/", ws, 2, Associativity.Left, (/)))
+    operatorPrecedenceParser.AddOperator(InfixOperator("%", ws, 2, Associativity.Left, (%)))
     operatorPrecedenceParser.AddOperator(InfixOperator("^", ws, 3, Associativity.Right, fun x y -> System.Math.Pow(x, y)))
     operatorPrecedenceParser.AddOperator(PrefixOperator("-", ws, 4, true, fun x -> -x))
     operatorPrecedenceParser.AddOperator(PrefixOperator("+", ws, 4, true, fun x -> x))

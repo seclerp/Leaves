@@ -20,6 +20,7 @@ expression =
 
 single_expression = 
     declaration_expression
+    | assignment_expression
     | math_expression
     | condition_expression
     | loop_expression
@@ -33,24 +34,24 @@ math_expression =
     plus_minus_term
 ;
 
-plus_minus_term = 
-    term2, { ( plus | minus ), asterisk_slash }
+plus_minus_expression = 
+    asterisk_slash_expression, { ( plus | minus ), asterisk_slash_expression }
 ;
 
-asterisk_slash_term = 
-    term3, { ( asterisk | slash ), term3 }
+asterisk_slash_expression = 
+    circumflex_expression, { ( asterisk | slash ), circumflex_expression }
 ;
 
-circumflex_term = 
-    plus_minus_unary, { ( circumflex ), plus_minus_unary }
+circumflex_expression = 
+    plus_minus_unary_expression, { ( circumflex ), plus_minus_unary_expression }
 ;
 
-plus_minus_unary = 
-    ( [ plus | minus ], ( lparent, single_expression, rparen ) | sharp_unary )
+plus_minus_unary_expression = 
+    ( [ plus | minus ], ( lparent, single_expression, rparen ) | sharp_unary_expression )
 ;
 
 (* Get lenght operator *)
-sharp_unary =
+sharp_unary_expression =
     ( "#", single_expression ) 
     | literal_or_identifier
 ;
@@ -136,7 +137,7 @@ arguments_list =
 (* Assignment *)
 (* a = 5 *)
 (* a, b = b, a *)
-assignment = 
+assignment_expression = 
     identifier_list, equals, expression_list
 ;
 
@@ -260,7 +261,7 @@ type_declaration =
     [ implements, identifier ], 
     [ where, identifier, is, identifier ], 
     lambda,
-    { expression} 
+    { expression } 
 ;
 
 type_member =
