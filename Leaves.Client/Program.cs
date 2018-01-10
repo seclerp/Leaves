@@ -8,8 +8,13 @@ namespace Leaves.Client
     {
         static void Main(string[] args)
         {
-            Language.ParseFloat("2.25");
-            Console.ReadKey();
+            Console.WriteLine("Leaves live interpreter. Leave blank input to exit");
+            do
+            {
+                Console.Write("-> ");
+                var input = Console.ReadLine();
+                Console.WriteLine($">> {MathExpression.Parse(input)}");
+            } while (true);
         }
     }
 }

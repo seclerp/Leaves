@@ -10,4 +10,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Leaves.Parser\Leaves.Parser.fsproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FParsec">
+      <HintPath>..\packages\FParsec.1.0.3\lib\netstandard1.6\FParsec.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

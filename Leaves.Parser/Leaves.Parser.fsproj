@@ -38,18 +38,20 @@
   <Import Project="$(FSharpTargetsPath)" Condition="Exists('$(FSharpTargetsPath)')" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Leaves.Parser.fs" />
+    <Compile Include="Ast.fs" />
+    <Compile Include="MathExpression.fs" />
+    <Compile Include="Shared.fs" />
     <Content Include="leaves.ebnf" />
     <None Include="packages.config" />
     <None Include="Script.fsx" />
     <Content Include="language.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="FParsec, Version=1.0.0.0, Culture=neutral, PublicKeyToken=40ccfc0a09edbb5d">
-      <HintPath>..\packages\FParsec.1.0.4-RC\lib\net40-client\FParsec.dll</HintPath>
+    <Reference Include="FParsec">
+      <HintPath>..\packages\FParsec.1.0.3\lib\net40-client\FParsec.dll</HintPath>
     </Reference>
-    <Reference Include="FParsecCS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=40ccfc0a09edbb5d">
-      <HintPath>..\packages\FParsec.1.0.4-RC\lib\net40-client\FParsecCS.dll</HintPath>
+    <Reference Include="FParsecCS">
+      <HintPath>..\packages\FParsec.1.0.3\lib\net40-client\FParsecCS.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
