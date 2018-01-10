@@ -7,5 +7,16 @@ module DeclarationExpression =
 
     let ws = spaces
     let pLet = pstring "let" .>> ws
-    let pIdentifier = pipe3 ( pipe2 ( letter ( pchar '_' <|> pchar '$' ) ) ) many ( letter <|> digit <|> pchar '_' <|> pchar '$' ) 
-    
+    let pIdentifier =
+        let isIdentifierFirstChar c = isLetter c || c = '_'
+        let isIdentifierChar c = isLetter c || isDigit c || c = '_' || c = '$'
+
+        many1Satisfy2L isIdentifierFirstChar isIdentifierChar "identifier"
+        .>> ws // skips trailing whitespace
+    let pTypeDeclaration =
+        let pDoubleDot = satisfy ':' 
+
+
+
+    let pDeclaration =
+        many1Satisfy3L 
