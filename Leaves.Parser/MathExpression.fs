@@ -12,7 +12,7 @@ module MathExpression =
 
     operatorPrecedenceParser.TermParser <- parseNumber <|> between (stringWs "(") (stringWs ")") expressionParser
 
-    operatorPrecedenceParser.AddOperator(InfixOperator("+", ws, 1, Associativity.Left, fun x y -> BinaryExpression( x "+" y )))
+    operatorPrecedenceParser.AddOperator(InfixOperator("+", ws, 1, Associativity.Left, (+)))
     operatorPrecedenceParser.AddOperator(InfixOperator("-", ws, 1, Associativity.Left, (-)))
     operatorPrecedenceParser.AddOperator(InfixOperator("*", ws, 2, Associativity.Left, (*)))
     operatorPrecedenceParser.AddOperator(InfixOperator("/", ws, 2, Associativity.Left, (/)))

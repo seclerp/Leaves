@@ -41,6 +41,7 @@
     <Compile Include="Ast.fs" />
     <Compile Include="MathExpression.fs" />
     <Compile Include="Shared.fs" />
+    <Compile Include="DeclarationExpression.fs" />
     <Content Include="leaves.ebnf" />
     <None Include="packages.config" />
     <None Include="Script.fsx" />
