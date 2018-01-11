@@ -12,18 +12,25 @@ module DeclarationExpression =
                     
         pLet >>. tuple3 pIdentifier pOptionalTypeDeclarationParser ( pEquals >>. ws >>. pIdentifier ) .>> ws
     
+    let pFunctionDeclaration =
+        pLet >>. tuple3 pIdentifier ( many pIdentifier ) pIdentifier .>> ws
+
     let pDeclaration =
-        choice [
-            pVariableDeclaration
-            //pFunctionDeclaration
+            pVariableDeclaration 
+            <|> pFunctionDeclaration
             //pDataStructureDeclaration
             //pTypeDeclaration
         ]
 
+
+
     let Parse input = 
         match run pDeclaration input with
-        | Success(result, _, _) -> VariableDeclaration result
-        | Failure(errorMsg, _, _) -> printfn "%s" errorMsg
+        | Success(result, _, _) -> 
+            match result with
+            | (name, _type, value) -> VariableDeclaration ( name, _type, value )
+            | _ -> failwith "Unknown declaration"
+        | Failure(errorMsg, _, _) -> failwith errorMsg
 
     (*let pDeclaration =
         many1Satisfy3L *)

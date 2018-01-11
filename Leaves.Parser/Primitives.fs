@@ -4,6 +4,9 @@ open Ast
 open FParsec
 
 module Primitives =
+
+    let a = pstring "213" >>= fun x -> VariableDeclaration (x, x, x)
+        
     let ws = spaces
     let pLet:Parser<string, unit> = pstring "let" .>> ws
     let pDoubleDot:Parser<char, unit> = pchar ':'  .>> ws
