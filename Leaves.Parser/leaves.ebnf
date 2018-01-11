@@ -93,8 +93,8 @@ literal =
 declaration_expression =
     variable_declaration
     | function_declaration
-    | data_structure
-    | type_structure
+    | data_structure_declaration
+    | type_structure_declaration
 ;
 
 variable_declaration = 

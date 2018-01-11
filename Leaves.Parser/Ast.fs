@@ -6,85 +6,87 @@ module Ast =
     type Identifier = string
 
     type SingleExpression = 
-        | DeclarationExpression
-        | AssignmentExpression
-        | BinaryExpression
-        | UnaryExpression
-        | ConditionExpression
-        | LoopExpression
-        | LoopControlExpression
-        | FunctionCallExpression
-        | FunctionControlExpression
-    type Expression = SingleExpression list
+        | DeclarationExpression of DeclarationExpression
+        | AssignmentExpression of AssignmentExpression
+        | BinaryExpression of BinaryExpression
+        | UnaryExpression of UnaryExpression
+        | ConditionExpression of ConditionExpression
+        | LoopExpression of LoopExpression
+        | LoopControlExpression of LoopControlExpression
+        | FunctionCallExpression of FunctionCallExpression
+        | FunctionControlExpression of FunctionControlExpression
+    and Expression = SingleExpression list
     
-    type DeclarationExpression = 
-        | VariableDeclaration
-        | FunctionDeclaration
-        | DataStructureDeclaration
-        | TypeStructureDeclaration
-    type ValueType =
+    and DeclarationExpression = 
+        | VariableDeclaration of VariableDeclaration
+        | FunctionDeclaration of FunctionDeclaration
+        | DataStructureDeclaration of DataStructureDeclaration
+        | TypeStructureDeclaration of TypeStructureDeclaration
+        
+    and ValueType =
         | Default
         | Immutable
         | Lazy
         | LazyImmutable
-    type VariableDeclaration =
-        ValueType *                 // immutable, lazy
+        
+    and VariableDeclaration =
+        (*ValueType *  *)           // immutable, lazy
         Identifier *                // name
-        Identifier *                // type name
-        SingleExpression            // value
+        Identifier option *         // type name
+        Identifier            // value
 
-    type FunctionDeclaration =
+    and FunctionDeclaration =
         ValueType *                                 // immutable, lazy
         Identifier *                                // name
         VariableDeclaration list *                  // arguments list
         Identifier *                                // return type name
         Expression                                  // body
-    type DataStructureDeclaration =
+    and DataStructureDeclaration =
         Identifier *                                // name
         VariableDeclaration list *                  // values
         Expression *                                // before insert
         Expression                                  // after insert
-    type TypeMemberDeclaration =
-        | FieldDeclaration
-        | MethodDeclaration
-        | PropertyDeclaration
-    type AccessLevel =
+    and TypeMemberDeclaration =
+        | FieldDeclaration of FieldDeclaration
+        | MethodDeclaration of MethodDeclaration
+        | PropertyDeclaration of PropertyDeclaration
+    and AccessLevel =
         | Public
         | Protected
         | Internal
         | ProtectedInternal
         | Private
-    type TypeStructureDeclaration =
+    and TypeStructureDeclaration =
         Identifier *                                // name
         Identifier *                                // extends type name
         Identifier *                                // implements type name
         Identifier * Identifier *                   // generic where
         TypeMemberDeclaration list                  // members
-    type FieldDeclaration =
+    and FieldDeclaration =
         AccessLevel *                               // access level
         VariableDeclaration                         // declaration
-    type MethodDeclaration =
+    and MethodDeclaration =
         AccessLevel *                               // access level
         FunctionDeclaration                         // declaration
-    type PropertyDeclaration =
+    and PropertyDeclaration =
         AccessLevel *                               // access level
         Identifier *                                // name
         SingleExpression *                          // default value
         Expression *                                // get
         Expression                                  // set
 
-    type AssignmentExpression =
+    and AssignmentExpression =
         Identifier list *                           // identifiers
         SingleExpression list                       // values
         
-    type UnaryOperation = 
+    and UnaryOperation = 
         | Minus
         | GetLength
-    type UnaryExpression = 
+    and UnaryExpression = 
         UnaryOperation *                            // operation
         Identifier                                  // operand
         
-    type BinaryOperation = 
+    and BinaryOperation = 
         | Plus
         | Minus
         | Star
@@ -97,51 +99,51 @@ module Ast =
         | LessThan
         | GreaterEqualsThan
         | LessEqualsThan
-    type BinaryExpression = 
+    and BinaryExpression = 
         Identifier *                                // first operand
         BinaryOperation *                           // operation
         Identifier                                  // second operand
 
-    type ConditionExpression =
-        | IfExpression
-        | IfElseExpression
-        | OptionExpression
-    type IfExpression =
+    and ConditionExpression =
+        | IfExpression of IfExpression
+        | IfElseExpression of IfElseExpression
+        | OptionExpression of OptionExpression
+    and IfExpression =
         SingleExpression *                          // condition
         Expression                                  // body
-    type IfElseExpression =
+    and IfElseExpression =
         SingleExpression *                          // condition
         Expression *                                // if body
         Expression                                  // else body
-    type WhenExpression =
+    and WhenExpression =
         SingleExpression *                          // case
         Expression                                  // body
-    type OptionExpression =
+    and OptionExpression =
         Identifier *                                // identifier
         WhenExpression list                         // cases
     
-    type LoopExpression =
-        | ForExpression
-        | WhileExpression
-        | DoWhileExpression
-    type ForExpression =
+    and LoopExpression =
+        | ForExpression of ForExpression
+        | WhileExpression of WhileExpression
+        | DoWhileExpression of DoWhileExpression
+    and ForExpression =
         Identifier *                                // counter
         SingleExpression *                          // collection
         Expression                                  // body
-    type WhileExpression =
+    and WhileExpression =
         SingleExpression *                          // condition
         Expression                                  // body
-    type DoWhileExpression =
+    and DoWhileExpression =
         Expression *                                // body
         SingleExpression                            // condition
 
-    type LoopControlExpression =
+    and LoopControlExpression =
         | Next
         | Break
 
-    type FunctionCallExpression =
+    and FunctionCallExpression =
         Identifier *                                // name
         SingleExpression list                       // parameters
 
-    type FunctionControlExpression =
+    and FunctionControlExpression =
         | Return

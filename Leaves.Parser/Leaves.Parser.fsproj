@@ -40,6 +40,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Ast.fs" />
     <Compile Include="MathExpression.fs" />
+    <Compile Include="Primitives.fs" />
     <Compile Include="Shared.fs" />
     <Compile Include="DeclarationExpression.fs" />
     <Content Include="leaves.ebnf" />
