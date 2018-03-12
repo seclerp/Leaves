@@ -1,0 +1,17 @@
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Leaves.Test.deps.json
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Leaves.Test.runtimeconfig.json
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Leaves.Test.runtimeconfig.dev.json
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Leaves.Test.dll
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Leaves.Test.pdb
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Leaves.dll
+C:\Projects\DotNet\Leaves\Leaves.Test\bin\Debug\netcoreapp2.0\Leaves.pdb
+C:\Projects\DotNet\Leaves\Leaves.Test\obj\Debug\netcoreapp2.0\Leaves.Test.csprojResolveAssemblyReference.cache
+C:\Projects\DotNet\Leaves\Leaves.Test\obj\Debug\netcoreapp2.0\Leaves.Test.csproj.CoreCompileInputs.cache
+C:\Projects\DotNet\Leaves\Leaves.Test\obj\Debug\netcoreapp2.0\Leaves.Test.AssemblyInfoInputs.cache
+C:\Projects\DotNet\Leaves\Leaves.Test\obj\Debug\netcoreapp2.0\Leaves.Test.AssemblyInfo.cs
+C:\Projects\DotNet\Leaves\Leaves.Test\obj\Debug\netcoreapp2.0\Leaves.Test.csproj.CopyComplete
+C:\Projects\DotNet\Leaves\Leaves.Test\obj\Debug\netcoreapp2.0\Leaves.Test.dll
+C:\Projects\DotNet\Leaves\Leaves.Test\obj\Debug\netcoreapp2.0\Leaves.Test.pdb

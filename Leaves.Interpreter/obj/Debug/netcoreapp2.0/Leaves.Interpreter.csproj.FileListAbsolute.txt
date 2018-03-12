@@ -1,0 +1,14 @@
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\bin\Debug\netcoreapp2.0\Leaves.Interpreter.deps.json
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\bin\Debug\netcoreapp2.0\Leaves.Interpreter.runtimeconfig.json
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\bin\Debug\netcoreapp2.0\Leaves.Interpreter.runtimeconfig.dev.json
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\bin\Debug\netcoreapp2.0\Leaves.Interpreter.dll
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\bin\Debug\netcoreapp2.0\Leaves.Interpreter.pdb
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\bin\Debug\netcoreapp2.0\Leaves.dll
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\bin\Debug\netcoreapp2.0\Leaves.pdb
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\obj\Debug\netcoreapp2.0\Leaves.Interpreter.csprojResolveAssemblyReference.cache
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\obj\Debug\netcoreapp2.0\Leaves.Interpreter.csproj.CoreCompileInputs.cache
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\obj\Debug\netcoreapp2.0\Leaves.Interpreter.AssemblyInfoInputs.cache
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\obj\Debug\netcoreapp2.0\Leaves.Interpreter.AssemblyInfo.cs
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\obj\Debug\netcoreapp2.0\Leaves.Interpreter.csproj.CopyComplete
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\obj\Debug\netcoreapp2.0\Leaves.Interpreter.dll
+C:\Projects\DotNet\Leaves\Leaves.Interpreter\obj\Debug\netcoreapp2.0\Leaves.Interpreter.pdb

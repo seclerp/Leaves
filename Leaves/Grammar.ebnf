@@ -1,0 +1,322 @@
+(* // comment *)
+(* /* comment */ *)
+
+(* Core *)
+this =
+    "@"
+;
+
+identifier = 
+    character | "_" | "$", { character | integer | "_" | "$" }
+;
+
+identifier_path =
+    [ this ], identifier_name, [ { "[", expression, "]" } ], { ".", identifier_path }
+;
+
+expression = 
+    { single_expression, [ semicolon ] } 
+;
+
+single_expression = 
+    declaration_expression
+    | assignment_expression
+    | math_expression
+    | condition_expression
+    | loop_expression
+    | loop_control_expression
+    | fcall_expression
+    | function_control_expression
+;
+
+(* Math expressions *)
+math_expression =
+    plus_minus_term
+;
+
+plus_minus_expression = 
+    asterisk_slash_expression, { ( plus | minus ), asterisk_slash_expression }
+;
+
+asterisk_slash_expression = 
+    circumflex_expression, { ( asterisk | slash ), circumflex_expression }
+;
+
+circumflex_expression = 
+    plus_minus_unary_expression, { ( circumflex ), plus_minus_unary_expression }
+;
+
+plus_minus_unary_expression = 
+    ( [ plus | minus ], ( lparent, single_expression, rparen ) | sharp_unary_expression )
+;
+
+(* Get lenght operator *)
+sharp_unary_expression =
+    ( "#", single_expression ) 
+    | literal_or_identifier
+;
+
+literal_or_identifier =
+    identifier_path
+    | literal
+;
+
+(* Literals *)
+collection_literal =
+    list_literal
+    | array_literal
+    | tuple_literal
+;
+
+simple_literal =
+    string
+    | number
+    | bool
+;
+
+literal =
+    collection_literal
+    | simple_literal
+;
+
+(*  let abc = 2;
+    let abc:int
+    let abc:int = 2
+
+    let f1 => print "123"
+    let f2:int => 2 + 2
+    let f3 (a, b) => a + b
+    !let f4:int (a:int, b:int) => 234
+    ~let f5 = someLazyExpression
+    ~!let f6 = someImmutableLazyExpression
+ *)
+declaration_expression =
+    variable_declaration
+    | function_declaration
+    | data_structure_declaration
+    | type_structure_declaration
+;
+
+variable_declaration = 
+    [ immutable ], [ lazy ], let, 
+    ( ( identifier, type_decl ) | ( identifier, [ type_decl ], equals, single_expression ) )
+;
+
+function_declaration =
+    only_declaration, [ lparen, arguments_list, rparen ], lambda, expression
+;
+
+only_declaration =
+    [ immutable ], [ lazy ], let, identifier, [ type_decl ]
+;
+
+type_identifier =
+    identifier, [ "<", type_identifier, ">" ]
+;
+
+type_decl = 
+    ":", type_identifier
+;
+
+(* Comma-separated "lists" *)
+(* a, b, c, d *)
+identifier_list =
+    identifier_path, { ",", arguments_list }
+;
+
+(* (2 + 3), 15, a *)
+expression_list =
+    single_expression, { ",", expression_list }
+;
+
+(* a:int, b:float, c *)
+arguments_list =
+    identifier, [ type_decl ], { ",", arguments_list }
+;
+
+(* Assignment *)
+(* a = 5 *)
+(* a, b = b, a *)
+assignment_expression = 
+    identifier_list, equals, expression_list
+;
+
+(* Conditions *)
+condition_expression =
+    if_expression
+    | option_expression
+;
+
+if_expression = 
+    if_lambda | if_then
+;
+
+(* if a == 5 => do_something *)
+if_lambda = 
+    if, single_expression, lambda, 
+    expression
+;
+
+(* if a == 5 then do_something else do_another_something*)
+if_then =
+    if, single_expression, then, 
+    expression, 
+    [ else, expression ]
+;
+
+(* option a =>
+     when 13 =>
+       print "a is 13"
+     ...
+     otherwise =>
+       print "Can't say what a is"
+*)
+option_expression =
+    option, identifier, lambda, 
+    {when, single_sxpression, lambda, expression}, 
+    [otherwise, lambda, expression]
+;
+
+(* Loops *)
+loop_expression =
+    for_expression
+    | while_expression
+    | do_while_expression
+;
+
+(* for i in [1..10:1] =>
+     // Something
+     
+   for item in list =>
+     // Something
+ *)
+for_expression = 
+    for, identifier, in, single_expression, lambda, expression
+;
+
+(* while a > 5 =>
+     // Something
+*)
+while_expression = 
+    ( (while, single_expression) | forever ), lambda, expression
+;
+
+(* do =>
+     // Something
+   while a > 6
+   
+   do =>
+     // Something
+   forever
+*)
+do_while_expression = 
+    do, lambda, expression, ( (while, single_expression) | forever )
+;
+
+loop_control_expression =
+    break
+    | next
+;
+
+(* Breaks loop *)
+break = "break";
+
+(* Jumps to next loop iteration (continue) *)
+next = "next";
+
+(* Function call *)
+(* func1(a, 1, 2) *)
+(* func1 a, 1, 2 *)
+fcall_expression =
+    (identifier, expression_list)
+    | (identifier, lparent, expression_list, rparen)
+;
+
+function_control_expression =
+    return
+;
+
+return = "return";
+
+access_level =
+    public
+    | protected
+    | private
+    | (protected, internal)
+;
+
+(* Data structures *)
+(* data SomeOtherDataStruct(g:int, h:int, j:int)
+   public data SomeOtherDataStruct2(d:int, e:int, f:int) =>
+     include OtherDataStruct3
+*)
+data_struct_declaration = 
+    [access_level], data, identifier, lparen, arguments_list, rparen, [lambda, expression]
+;
+
+(* Types (classes) *)
+type_declaration =
+    type, identifier, 
+    [ extends, identifier ], 
+    [ implements, identifier ], 
+    [ where, identifier, is, identifier ], 
+    lambda,
+    { expression } 
+;
+
+type_member =
+    type_field
+    | type_prop
+    | type_method
+;
+
+type_field =
+    [ access_level ], let, 
+    ( (identifier, type_decl) |  (identifier, [ type_decl ], equals, single_expression ) )
+;
+
+type_prop =
+   [ access_level ], prop, 
+   ( ( identifier, type_decl ) | ( identifier, [ type_decl ], equals, single_expression ) ),
+   [ lambda, prop_full_body ]
+;
+
+prop_full_body =
+    ( [ access_level ], get, lambda, expression )
+    | ( [ access_level ], set, lambda, expression )
+    | ( [ access_level ], get, lambda, expression, [ access_level ], set, lambda, expression )
+    | ( [ access_level ], set, lambda, expression, [ access_level ], get, lambda, expression )
+;
+
+type_method =
+    ( [ access_level ], function_declaration )
+    | ( over, identifier, [type_decl], [lparen, arguments_list, rparen], lambda, expression )
+;
+
+(* List literals *)
+(* (1, 2, 3, 4) *)
+list_literal =
+    ( lparen, 
+        [ ( expression_list ) | ( range_expression ) ],
+    rparen )
+;
+
+(* Array literals *)
+(* [1, 2, 3, 4] *)
+array_literal =
+    ( lbrace, 
+        [ ( expression_list ) | ( range_expression ) ],
+    rbrace )
+;
+
+(* Tuple literal*)
+(* {1, 2} *)
+tuple_literal =
+    ( lbrace, [ ( expression_list ) ], rbrace )
+;
+
+(* Range *)
+(* 1..10:2 - from 1 to 10 step 2 *)
+range_expression =
+    single_expression, "..", [ single_expression ], [ ":", single_expression ]
+;

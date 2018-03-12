@@ -1,0 +1,9 @@
+C:\Projects\DotNet\Leaves\Leaves\obj\Debug\netstandard2.0\Leaves.csprojResolveAssemblyReference.cache
+C:\Projects\DotNet\Leaves\Leaves\obj\Debug\netstandard2.0\Leaves.csproj.CoreCompileInputs.cache
+C:\Projects\DotNet\Leaves\Leaves\obj\Debug\netstandard2.0\Leaves.AssemblyInfoInputs.cache
+C:\Projects\DotNet\Leaves\Leaves\obj\Debug\netstandard2.0\Leaves.AssemblyInfo.cs
+C:\Projects\DotNet\Leaves\Leaves\bin\Debug\netstandard2.0\Leaves.deps.json
+C:\Projects\DotNet\Leaves\Leaves\bin\Debug\netstandard2.0\Leaves.dll
+C:\Projects\DotNet\Leaves\Leaves\bin\Debug\netstandard2.0\Leaves.pdb
+C:\Projects\DotNet\Leaves\Leaves\obj\Debug\netstandard2.0\Leaves.dll
+C:\Projects\DotNet\Leaves\Leaves\obj\Debug\netstandard2.0\Leaves.pdb
